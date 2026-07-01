@@ -1,0 +1,35 @@
+{
+    "name": "소통웨어 산업자동화",
+    "short_name": "소통웨어",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0D1B2A",
+    "theme_color": "#00897B",
+    "description": "생산라인 모니터링 시스템 홍보사이트",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
