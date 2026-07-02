@@ -8,7 +8,7 @@ class SotongAutomationApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '소통웨어 산업자동화',
+      title: '소통웨어 산업자동화 모니터링 시스템',
       debugShowCheckedModeBanner: false,
       theme: PromoTheme.light,
       home: const HomeScreen(),
