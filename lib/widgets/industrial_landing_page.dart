@@ -182,61 +182,74 @@ class _BrandMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final compact = MediaQuery.sizeOf(context).width < 420;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact =
+            constraints.maxWidth < 180 ||
+            MediaQuery.sizeOf(context).width < 420;
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: compact ? 30 : 34,
-          height: compact ? 30 : 34,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient: const LinearGradient(
-              colors: [PromoColors.electricBlue, PromoColors.cyan],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: PromoColors.electricBlue.withValues(alpha: 0.36),
-                blurRadius: 22,
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.factory,
-            color: Colors.white,
-            size: compact ? 17 : 19,
-          ),
-        ),
-        SizedBox(width: compact ? 8 : 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              '소통웨어',
-              style: TextStyle(
-                color: PromoColors.textOnDark,
-                fontSize: compact ? 16 : 17,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.2,
+            Container(
+              width: compact ? 30 : 34,
+              height: compact ? 30 : 34,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: const LinearGradient(
+                  colors: [PromoColors.electricBlue, PromoColors.cyan],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: PromoColors.electricBlue.withValues(alpha: 0.36),
+                    blurRadius: 22,
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.factory,
+                color: Colors.white,
+                size: compact ? 17 : 19,
               ),
             ),
-            if (!compact) ...[
-              const SizedBox(height: 1),
-              const Text(
-                'Factory Monitoring Platform',
-                style: TextStyle(
-                  color: PromoColors.cyan,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1,
-                ),
+            SizedBox(width: compact ? 8 : 12),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '소통웨어',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: PromoColors.textOnDark,
+                      fontSize: compact ? 16 : 17,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  if (!compact) ...[
+                    const SizedBox(height: 1),
+                    const Text(
+                      'Factory Monitoring Platform',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: TextStyle(
+                        color: PromoColors.cyan,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ],
+                ],
               ),
-            ],
+            ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -539,63 +552,68 @@ class _LiveDashboardShowcase extends StatelessWidget {
                 padding: const EdgeInsets.all(18),
                 child: Column(
                   children: [
-                    GridView.count(
-                      crossAxisCount: 4,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      childAspectRatio: 1.1,
-                      children: const [
-                        _MiniMetricCard(
-                          label: '설비가동률',
-                          value: '94.8%',
-                          color: PromoColors.success,
-                          icon: Icons.precision_manufacturing,
-                        ),
-                        _MiniMetricCard(
-                          label: '생산량',
-                          value: '12,840',
-                          color: PromoColors.cyan,
-                          icon: Icons.inventory_2_outlined,
-                        ),
-                        _MiniMetricCard(
-                          label: 'Alarm',
-                          value: '03',
-                          color: PromoColors.alarm,
-                          icon: Icons.warning_amber_rounded,
-                        ),
-                        _MiniMetricCard(
-                          label: '전력사용량',
-                          value: '418 kW',
-                          color: PromoColors.warning,
-                          icon: Icons.bolt,
-                        ),
-                        _MiniMetricCard(
-                          label: 'OEE',
-                          value: '88.6%',
-                          color: PromoColors.electricBlue,
-                          icon: Icons.donut_large,
-                        ),
-                        _MiniMetricCard(
-                          label: 'Temperature',
-                          value: '36.8C',
-                          color: PromoColors.warning,
-                          icon: Icons.thermostat,
-                        ),
-                        _MiniMetricCard(
-                          label: 'Pressure',
-                          value: '6.4 bar',
-                          color: PromoColors.cyan,
-                          icon: Icons.speed,
-                        ),
-                        _MiniMetricCard(
-                          label: 'Cycle Time',
-                          value: '42.1s',
-                          color: PromoColors.success,
-                          icon: Icons.timer_outlined,
-                        ),
-                      ],
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final columns = constraints.maxWidth > 520 ? 4 : 2;
+                        return GridView.count(
+                          crossAxisCount: columns,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          childAspectRatio: columns == 4 ? 1.1 : 1.25,
+                          children: const [
+                            _MiniMetricCard(
+                              label: '설비가동률',
+                              value: '94.8%',
+                              color: PromoColors.success,
+                              icon: Icons.precision_manufacturing,
+                            ),
+                            _MiniMetricCard(
+                              label: '생산량',
+                              value: '12,840',
+                              color: PromoColors.cyan,
+                              icon: Icons.inventory_2_outlined,
+                            ),
+                            _MiniMetricCard(
+                              label: 'Alarm',
+                              value: '03',
+                              color: PromoColors.alarm,
+                              icon: Icons.warning_amber_rounded,
+                            ),
+                            _MiniMetricCard(
+                              label: '전력사용량',
+                              value: '418 kW',
+                              color: PromoColors.warning,
+                              icon: Icons.bolt,
+                            ),
+                            _MiniMetricCard(
+                              label: 'OEE',
+                              value: '88.6%',
+                              color: PromoColors.electricBlue,
+                              icon: Icons.donut_large,
+                            ),
+                            _MiniMetricCard(
+                              label: 'Temperature',
+                              value: '36.8C',
+                              color: PromoColors.warning,
+                              icon: Icons.thermostat,
+                            ),
+                            _MiniMetricCard(
+                              label: 'Pressure',
+                              value: '6.4 bar',
+                              color: PromoColors.cyan,
+                              icon: Icons.speed,
+                            ),
+                            _MiniMetricCard(
+                              label: 'Cycle Time',
+                              value: '42.1s',
+                              color: PromoColors.success,
+                              icon: Icons.timer_outlined,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
                     Row(
@@ -1463,6 +1481,9 @@ class _StatusPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxWidth: math.max(180, MediaQuery.sizeOf(context).width - 64),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
       decoration: BoxDecoration(
         color: PromoColors.electricBlue.withValues(alpha: 0.12),
@@ -1474,13 +1495,18 @@ class _StatusPill extends StatelessWidget {
         children: [
           Icon(icon, color: PromoColors.cyan, size: 15),
           const SizedBox(width: 8),
-          Text(
-            label,
-            style: const TextStyle(
-              color: PromoColors.cyan,
-              fontSize: 11,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.25,
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              style: const TextStyle(
+                color: PromoColors.cyan,
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.25,
+              ),
             ),
           ),
         ],
