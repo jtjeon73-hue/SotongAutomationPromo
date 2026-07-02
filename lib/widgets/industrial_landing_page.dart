@@ -48,8 +48,8 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
     super.dispose();
   }
 
-  Future<void> _openEmail(String subject) async {
-    await launchUrl(PromoContact.mailtoUri(subject: subject));
+  Future<void> _openEmail() async {
+    await launchUrl(PromoContact.mailtoUri());
   }
 
   void _scrollTo(GlobalKey key) {
@@ -65,6 +65,8 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
 
   @override
   Widget build(BuildContext context) {
+    final viewportWidth = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
       backgroundColor: PromoColors.deepNavy,
       body: Stack(
@@ -78,10 +80,10 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                 elevation: 0,
                 backgroundColor: PromoColors.deepNavy.withValues(alpha: 0.92),
                 surfaceTintColor: Colors.transparent,
-                titleSpacing: 24,
+                titleSpacing: viewportWidth > 420 ? 24 : 14,
                 title: const _BrandMark(),
                 actions: [
-                  if (MediaQuery.sizeOf(context).width > 1120) ...[
+                  if (viewportWidth > 1120) ...[
                     _NavButton('HOME', () => _scrollTo(_homeKey)),
                     _NavButton('시스템소개', () => _scrollTo(_introKey)),
                     _NavButton('핵심기능', () => _scrollTo(_featuresKey)),
@@ -89,14 +91,14 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                     _NavButton('소프트웨어 화면', () => _scrollTo(_previewKey)),
                     _NavButton('적용사례', () => _scrollTo(_casesKey)),
                     _NavButton('도입효과', () => _scrollTo(_benefitsKey)),
-                    _NavButton('문의하기', () => _scrollTo(_contactKey)),
+                    _NavButton('문의하기', _openEmail),
                   ],
                   Padding(
                     padding: const EdgeInsets.only(right: 24, left: 10),
                     child: _ActionButton(
-                      label: '데모 요청',
+                      label: viewportWidth > 420 ? '데모 요청하기' : '데모 요청',
                       icon: Icons.play_circle_outline,
-                      onPressed: () => _openEmail('데모 요청'),
+                      onPressed: _openEmail,
                     ),
                   ),
                 ],
@@ -106,8 +108,8 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                   key: _homeKey,
                   child: _HeroSection(
                     animation: _pulseController,
-                    onDemo: () => _openEmail('데모 요청'),
-                    onConsult: () => _openEmail('상담 문의'),
+                    onDemo: _openEmail,
+                    onConsult: _openEmail,
                     onExplore: () => _scrollTo(_previewKey),
                   ),
                 ),
@@ -136,6 +138,7 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                   child: const _SoftwarePreviewSection(),
                 ),
               ),
+              SliverToBoxAdapter(child: _MidPageCta(onDemo: _openEmail)),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
                   key: _casesKey,
@@ -152,8 +155,8 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                 child: KeyedSubtree(
                   key: _contactKey,
                   child: _ContactSection(
-                    onDemo: () => _openEmail('데모 요청'),
-                    onConsult: () => _openEmail('상담 문의'),
+                    onDemo: _openEmail,
+                    onConsult: _openEmail,
                   ),
                 ),
               ),
@@ -179,12 +182,14 @@ class _BrandMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final compact = MediaQuery.sizeOf(context).width < 420;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 34,
-          height: 34,
+          width: compact ? 30 : 34,
+          height: compact ? 30 : 34,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             gradient: const LinearGradient(
@@ -197,32 +202,38 @@ class _BrandMark extends StatelessWidget {
               ),
             ],
           ),
-          child: const Icon(Icons.factory, color: Colors.white, size: 19),
+          child: Icon(
+            Icons.factory,
+            color: Colors.white,
+            size: compact ? 17 : 19,
+          ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: compact ? 8 : 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          children: const [
+          children: [
             Text(
               '소통웨어',
               style: TextStyle(
                 color: PromoColors.textOnDark,
-                fontSize: 17,
+                fontSize: compact ? 16 : 17,
                 fontWeight: FontWeight.w800,
                 letterSpacing: -0.2,
               ),
             ),
-            SizedBox(height: 1),
-            Text(
-              'Factory Monitoring Platform',
-              style: TextStyle(
-                color: PromoColors.cyan,
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1,
+            if (!compact) ...[
+              const SizedBox(height: 1),
+              const Text(
+                'Factory Monitoring Platform',
+                style: TextStyle(
+                  color: PromoColors.cyan,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ],
@@ -414,13 +425,13 @@ class _HeroCopy extends StatelessWidget {
           runSpacing: 14,
           children: [
             _ActionButton(
-              label: '데모 요청',
+              label: '데모 요청하기',
               icon: Icons.play_arrow_rounded,
               onPressed: onDemo,
               large: true,
             ),
             _GhostButton(
-              label: '상담 문의',
+              label: '상담 문의하기',
               icon: Icons.support_agent,
               onPressed: onConsult,
               large: true,
@@ -944,6 +955,96 @@ class _SoftwarePreviewSection extends StatelessWidget {
   }
 }
 
+class _MidPageCta extends StatelessWidget {
+  const _MidPageCta({required this.onDemo});
+
+  final VoidCallback onDemo;
+
+  @override
+  Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width > 760;
+
+    return _SectionShell(
+      background: PromoColors.deepNavy,
+      top: isWide ? 36 : 28,
+      bottom: isWide ? 36 : 28,
+      child: _HoverGlowCard(
+        padding: EdgeInsets.symmetric(
+          horizontal: isWide ? 38 : 22,
+          vertical: isWide ? 30 : 24,
+        ),
+        borderColor: PromoColors.electricBlue.withValues(alpha: 0.42),
+        child: isWide
+            ? Row(
+                children: [
+                  const Expanded(child: _MidPageCtaCopy()),
+                  const SizedBox(width: 28),
+                  _ActionButton(
+                    label: '데모 요청',
+                    icon: Icons.play_arrow_rounded,
+                    onPressed: onDemo,
+                    large: true,
+                  ),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const _MidPageCtaCopy(),
+                  const SizedBox(height: 22),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: _ActionButton(
+                      label: '데모 요청',
+                      icon: Icons.play_arrow_rounded,
+                      onPressed: onDemo,
+                      large: true,
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class _MidPageCtaCopy extends StatelessWidget {
+  const _MidPageCtaCopy();
+
+  @override
+  Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width > 760;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _StatusPill(label: 'CONSULTING CTA', icon: Icons.support_agent),
+        const SizedBox(height: 16),
+        Text(
+          '지금 바로 상담을 받아보세요.',
+          style: TextStyle(
+            color: PromoColors.textOnDark,
+            fontSize: isWide ? 32 : 26,
+            height: 1.22,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -0.8,
+          ),
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          '현장 설비와 생산 데이터 흐름을 확인한 뒤 데모 화면과 구축 방향을 제안드립니다.',
+          style: TextStyle(
+            color: PromoColors.textMutedOnDark,
+            fontSize: 15,
+            height: 1.65,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _IndustryCaseSection extends StatelessWidget {
   const _IndustryCaseSection();
 
@@ -1083,10 +1184,15 @@ class _ContactSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width > 760;
+
     return _SectionShell(
       background: PromoColors.deepNavy,
       child: _HoverGlowCard(
-        padding: const EdgeInsets.symmetric(horizontal: 42, vertical: 46),
+        padding: EdgeInsets.symmetric(
+          horizontal: isWide ? 42 : 22,
+          vertical: isWide ? 46 : 32,
+        ),
         borderColor: PromoColors.cyan.withValues(alpha: 0.42),
         child: Stack(
           children: [
@@ -1098,12 +1204,12 @@ class _ContactSection extends StatelessWidget {
                   icon: Icons.rocket_launch_outlined,
                 ),
                 const SizedBox(height: 22),
-                const Text(
-                  '지금 바로\n소통웨어 산업자동화 모니터링 시스템을 경험해보세요.',
+                Text(
+                  '공장 자동화 및 모니터링 시스템 구축이 필요하신가요?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: PromoColors.textOnDark,
-                    fontSize: 42,
+                    fontSize: isWide ? 42 : 30,
                     height: 1.22,
                     fontWeight: FontWeight.w900,
                     letterSpacing: -1.4,
@@ -1111,12 +1217,34 @@ class _ContactSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  '현장의 PLC, 설비, 생산, 품질, 알람 데이터를 연결해 대기업 SI 수준의 통합 관제 환경을 설계합니다.',
+                  '귀사의 생산 환경에 맞는 맞춤형 시스템을 제안드립니다.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: PromoColors.textMutedOnDark,
                     fontSize: 17,
                     height: 1.7,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'PLC 연동, 설비 데이터 수집, 생산 모니터링, MES/SCADA, AI 예지보전까지 상담 메일 한 통으로 시작하세요.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: PromoColors.textMutedOnDark,
+                    fontSize: 15,
+                    height: 1.7,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  '지금 바로 상담을 받아보세요.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: PromoColors.cyan,
+                    fontSize: 18,
+                    height: 1.45,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 34),
@@ -1126,15 +1254,15 @@ class _ContactSection extends StatelessWidget {
                   alignment: WrapAlignment.center,
                   children: [
                     _ActionButton(
-                      label: '데모 요청',
-                      icon: Icons.play_arrow_rounded,
-                      onPressed: onDemo,
+                      label: '상담 문의하기',
+                      icon: Icons.support_agent,
+                      onPressed: onConsult,
                       large: true,
                     ),
                     _GhostButton(
-                      label: '상담 문의',
-                      icon: Icons.support_agent,
-                      onPressed: onConsult,
+                      label: '데모 요청하기',
+                      icon: Icons.play_arrow_rounded,
+                      onPressed: onDemo,
                       large: true,
                     ),
                   ],
@@ -1163,20 +1291,75 @@ class _Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width > 760;
+
     return Container(
       width: double.infinity,
       color: const Color(0xFF040914),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 34),
-      child: const Center(
-        child: Text(
-          'SOTONGWARE INDUSTRIAL AUTOMATION MONITORING SYSTEM  |  PLC  MES  SCADA  AI  CLOUD',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: PromoColors.textMutedOnDark,
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.1,
-          ),
+      padding: EdgeInsets.symmetric(
+        horizontal: isWide ? 32 : 22,
+        vertical: isWide ? 38 : 32,
+      ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Text(
+              '소통웨어(SotongWare)',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.textOnDark,
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.1,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              '산업자동화 모니터링 시스템',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.textMutedOnDark,
+                fontSize: 13,
+                height: 1.5,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 14),
+            Text(
+              '문의',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.cyan,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1,
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(
+              PromoContact.email,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.cyan,
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.2,
+              ),
+            ),
+            SizedBox(height: 18),
+            Text(
+              'SOTONGWARE INDUSTRIAL AUTOMATION MONITORING SYSTEM  |  PLC  MES  SCADA  AI  CLOUD',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.textMutedOnDark,
+                fontSize: 11,
+                height: 1.6,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.1,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -1354,6 +1537,8 @@ class _ActionButtonState extends State<_ActionButton> {
 
   @override
   Widget build(BuildContext context) {
+    final compact = MediaQuery.sizeOf(context).width < 420;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
@@ -1363,15 +1548,23 @@ class _ActionButtonState extends State<_ActionButton> {
         child: ElevatedButton.icon(
           onPressed: widget.onPressed,
           icon: Icon(widget.icon, size: widget.large ? 21 : 18),
-          label: Text(widget.label),
+          label: Text(
+            widget.label,
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+            softWrap: false,
+          ),
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: PromoColors.electricBlue,
             shadowColor: PromoColors.electricBlue.withValues(alpha: 0.5),
             elevation: _hovered ? 12 : 6,
-            minimumSize: Size(widget.large ? 168 : 132, widget.large ? 54 : 42),
+            minimumSize: Size(
+              widget.large ? 168 : (compact ? 108 : 132),
+              widget.large ? 54 : 42,
+            ),
             padding: EdgeInsets.symmetric(
-              horizontal: widget.large ? 24 : 16,
+              horizontal: widget.large ? 24 : (compact ? 12 : 16),
               vertical: widget.large ? 16 : 11,
             ),
             shape: RoundedRectangleBorder(
@@ -1406,6 +1599,8 @@ class _GhostButtonState extends State<_GhostButton> {
 
   @override
   Widget build(BuildContext context) {
+    final compact = MediaQuery.sizeOf(context).width < 420;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
@@ -1425,15 +1620,23 @@ class _GhostButtonState extends State<_GhostButton> {
         child: OutlinedButton.icon(
           onPressed: widget.onPressed,
           icon: Icon(widget.icon, size: widget.large ? 21 : 18),
-          label: Text(widget.label),
+          label: Text(
+            widget.label,
+            maxLines: 1,
+            overflow: TextOverflow.fade,
+            softWrap: false,
+          ),
           style: OutlinedButton.styleFrom(
             foregroundColor: PromoColors.textOnDark,
             side: BorderSide(
               color: _hovered ? PromoColors.cyan : PromoColors.blueStroke,
             ),
-            minimumSize: Size(widget.large ? 168 : 132, widget.large ? 54 : 42),
+            minimumSize: Size(
+              widget.large ? 168 : (compact ? 108 : 132),
+              widget.large ? 54 : 42,
+            ),
             padding: EdgeInsets.symmetric(
-              horizontal: widget.large ? 24 : 16,
+              horizontal: widget.large ? 24 : (compact ? 12 : 16),
               vertical: widget.large ? 16 : 11,
             ),
             shape: RoundedRectangleBorder(
