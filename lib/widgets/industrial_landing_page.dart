@@ -113,7 +113,10 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                 ),
               ),
               SliverToBoxAdapter(
-                child: KeyedSubtree(key: _introKey, child: const _IntroSection()),
+                child: KeyedSubtree(
+                  key: _introKey,
+                  child: const _IntroSection(),
+                ),
               ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
@@ -664,7 +667,8 @@ class _IntroSection extends StatelessWidget {
                 _IntroCard(
                   icon: Icons.settings_input_component,
                   title: 'Field Connectivity',
-                  description: 'PLC, Modbus TCP, OPC UA, MQTT, SQL 기반의 다중 통신 구조',
+                  description:
+                      'PLC, Modbus TCP, OPC UA, MQTT, SQL 기반의 다중 통신 구조',
                 ),
                 _IntroCard(
                   icon: Icons.analytics_outlined,
@@ -716,7 +720,11 @@ class _FeatureSection extends StatelessWidget {
   const _FeatureSection();
 
   static const features = [
-    _IconSpec('실시간 모니터링', 'Live data acquisition', Icons.monitor_heart_outlined),
+    _IconSpec(
+      '실시간 모니터링',
+      'Live data acquisition',
+      Icons.monitor_heart_outlined,
+    ),
     _IconSpec('AI 분석', 'Anomaly & prediction', Icons.auto_graph),
     _IconSpec('예지보전', 'Predictive maintenance', Icons.build_circle_outlined),
     _IconSpec('설비관리', 'Asset lifecycle', Icons.precision_manufacturing),
@@ -751,10 +759,10 @@ class _FeatureSection extends StatelessWidget {
               final columns = constraints.maxWidth > 1120
                   ? 5
                   : constraints.maxWidth > 820
-                      ? 3
-                      : constraints.maxWidth > 560
-                          ? 2
-                          : 1;
+                  ? 3
+                  : constraints.maxWidth > 560
+                  ? 2
+                  : 1;
               final gap = columns == 1 ? 14.0 : 16.0;
               final width =
                   (constraints.maxWidth - (columns - 1) * gap) / columns;
@@ -763,7 +771,10 @@ class _FeatureSection extends StatelessWidget {
                 runSpacing: gap,
                 children: [
                   for (final feature in features)
-                    SizedBox(width: width, child: _FeatureTile(feature: feature)),
+                    SizedBox(
+                      width: width,
+                      child: _FeatureTile(feature: feature),
+                    ),
                 ],
               );
             },
@@ -792,7 +803,11 @@ class _ArchitectureSection extends StatelessWidget {
         _IconSpec('Data Collector', 'Protocol Gateway', Icons.sensors),
         _IconSpec('Application Server', 'Business Logic', Icons.dns_outlined),
         _IconSpec('Database', 'History / Trend', Icons.storage),
-        _IconSpec('AI Engine', 'Prediction Model', Icons.psychology_alt_outlined),
+        _IconSpec(
+          'AI Engine',
+          'Prediction Model',
+          Icons.psychology_alt_outlined,
+        ),
       ],
     ),
     _ArchitectureLayer(
@@ -866,11 +881,19 @@ class _SoftwarePreviewSection extends StatelessWidget {
   const _SoftwarePreviewSection();
 
   static const previews = [
-    _PreviewSpec('Dashboard', Icons.dashboard_customize, PromoColors.electricBlue),
+    _PreviewSpec(
+      'Dashboard',
+      Icons.dashboard_customize,
+      PromoColors.electricBlue,
+    ),
     _PreviewSpec('Alarm', Icons.warning_amber_rounded, PromoColors.alarm),
     _PreviewSpec('Trend', Icons.show_chart, PromoColors.cyan),
     _PreviewSpec('Report', Icons.summarize_outlined, PromoColors.success),
-    _PreviewSpec('Production', Icons.precision_manufacturing, PromoColors.warning),
+    _PreviewSpec(
+      'Production',
+      Icons.precision_manufacturing,
+      PromoColors.warning,
+    ),
     _PreviewSpec('Recipe', Icons.tune, PromoColors.purple),
     _PreviewSpec('SPC', Icons.query_stats, PromoColors.cyan),
     _PreviewSpec('History', Icons.history, PromoColors.electricBlue),
@@ -894,8 +917,8 @@ class _SoftwarePreviewSection extends StatelessWidget {
               final columns = constraints.maxWidth > 1180
                   ? 4
                   : constraints.maxWidth > 760
-                      ? 2
-                      : 1;
+                  ? 2
+                  : 1;
               const gap = 18.0;
               final width =
                   (constraints.maxWidth - (columns - 1) * gap) / columns;
@@ -954,10 +977,10 @@ class _IndustryCaseSection extends StatelessWidget {
               final columns = constraints.maxWidth > 1080
                   ? 5
                   : constraints.maxWidth > 760
-                      ? 3
-                      : constraints.maxWidth > 520
-                          ? 2
-                          : 1;
+                  ? 3
+                  : constraints.maxWidth > 520
+                  ? 2
+                  : 1;
               const gap = 16.0;
               final width =
                   (constraints.maxWidth - (columns - 1) * gap) / columns;
@@ -966,7 +989,10 @@ class _IndustryCaseSection extends StatelessWidget {
                 runSpacing: gap,
                 children: [
                   for (final item in industries)
-                    SizedBox(width: width, child: _IndustryCard(item: item)),
+                    SizedBox(
+                      width: width,
+                      child: _IndustryCard(item: item),
+                    ),
                 ],
               );
             },
@@ -984,9 +1010,24 @@ class _BenefitsSection extends StatelessWidget {
 
   static const benefits = [
     _BenefitSpec('설비가동률', '20~30%', Icons.trending_up, PromoColors.success),
-    _BenefitSpec('생산성', '15~25%', Icons.rocket_launch_outlined, PromoColors.cyan),
-    _BenefitSpec('불량감소', '10~20%', Icons.verified_outlined, PromoColors.electricBlue),
-    _BenefitSpec('유지보수비', '20~40%', Icons.savings_outlined, PromoColors.warning),
+    _BenefitSpec(
+      '생산성',
+      '15~25%',
+      Icons.rocket_launch_outlined,
+      PromoColors.cyan,
+    ),
+    _BenefitSpec(
+      '불량감소',
+      '10~20%',
+      Icons.verified_outlined,
+      PromoColors.electricBlue,
+    ),
+    _BenefitSpec(
+      '유지보수비',
+      '20~40%',
+      Icons.savings_outlined,
+      PromoColors.warning,
+    ),
     _BenefitSpec('다운타임', '30%', Icons.timer_off_outlined, PromoColors.alarm),
   ];
 
@@ -1008,10 +1049,10 @@ class _BenefitsSection extends StatelessWidget {
               final columns = constraints.maxWidth > 1060
                   ? 5
                   : constraints.maxWidth > 760
-                      ? 3
-                      : constraints.maxWidth > 520
-                          ? 2
-                          : 1;
+                  ? 3
+                  : constraints.maxWidth > 520
+                  ? 2
+                  : 1;
               const gap = 16.0;
               final width =
                   (constraints.maxWidth - (columns - 1) * gap) / columns;
@@ -1020,7 +1061,10 @@ class _BenefitsSection extends StatelessWidget {
                 runSpacing: gap,
                 children: [
                   for (final benefit in benefits)
-                    SizedBox(width: width, child: _BenefitCard(benefit: benefit)),
+                    SizedBox(
+                      width: width,
+                      child: _BenefitCard(benefit: benefit),
+                    ),
                 ],
               );
             },
@@ -1046,9 +1090,7 @@ class _ContactSection extends StatelessWidget {
         borderColor: PromoColors.cyan.withValues(alpha: 0.42),
         child: Stack(
           children: [
-            Positioned.fill(
-              child: CustomPaint(painter: _CtaCircuitPainter()),
-            ),
+            Positioned.fill(child: CustomPaint(painter: _CtaCircuitPainter())),
             Column(
               children: [
                 const _StatusPill(
@@ -1472,7 +1514,7 @@ class _HoverGlowCardState extends State<_HoverGlowCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOutCubic,
-        transform: Matrix4.identity()..translate(0.0, _hovered ? -4.0 : 0.0),
+        transform: Matrix4.translationValues(0.0, _hovered ? -4.0 : 0.0, 0.0),
         padding: widget.padding,
         decoration: BoxDecoration(
           color: PromoColors.cardBg.withValues(alpha: 0.86),
@@ -1481,7 +1523,7 @@ class _HoverGlowCardState extends State<_HoverGlowCard> {
             color: _hovered
                 ? PromoColors.cyan.withValues(alpha: 0.62)
                 : (widget.borderColor ??
-                    PromoColors.blueStroke.withValues(alpha: 0.55)),
+                      PromoColors.blueStroke.withValues(alpha: 0.55)),
           ),
           boxShadow: [
             BoxShadow(
@@ -1685,7 +1727,11 @@ class _AlarmListPanel extends StatelessWidget {
       title: 'Alarm List',
       child: Column(
         children: const [
-          _AlarmRow('11:24:03', 'CNC-02 Spindle load high', PromoColors.warning),
+          _AlarmRow(
+            '11:24:03',
+            'CNC-02 Spindle load high',
+            PromoColors.warning,
+          ),
           _AlarmRow('11:23:41', 'Robot-07 cycle delay', PromoColors.alarm),
           _AlarmRow('11:22:08', 'Conveyor speed restored', PromoColors.success),
           _AlarmRow('11:21:35', 'PLC heartbeat normal', PromoColors.cyan),
@@ -1708,7 +1754,11 @@ class _AlarmRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          Container(width: 6, height: 6, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
           const SizedBox(width: 8),
           Text(
             time,
@@ -1766,11 +1816,17 @@ class _ControlRoomCard extends StatelessWidget {
           const SizedBox(height: 18),
           Row(
             children: const [
-              Expanded(child: _ControlStat(label: 'Connected Machines', value: '128')),
+              Expanded(
+                child: _ControlStat(label: 'Connected Machines', value: '128'),
+              ),
               SizedBox(width: 12),
-              Expanded(child: _ControlStat(label: 'Data Points / sec', value: '42K')),
+              Expanded(
+                child: _ControlStat(label: 'Data Points / sec', value: '42K'),
+              ),
               SizedBox(width: 12),
-              Expanded(child: _ControlStat(label: 'AI Alerts', value: '7')),
+              Expanded(
+                child: _ControlStat(label: 'AI Alerts', value: '7'),
+              ),
             ],
           ),
         ],
@@ -1802,7 +1858,9 @@ class _IntroCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: PromoColors.electricBlue.withValues(alpha: 0.12),
-              border: Border.all(color: PromoColors.cyan.withValues(alpha: 0.18)),
+              border: Border.all(
+                color: PromoColors.cyan.withValues(alpha: 0.18),
+              ),
             ),
             child: Icon(icon, color: PromoColors.cyan),
           ),
@@ -1987,7 +2045,9 @@ class _ArchitectureNodeCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(17),
         color: PromoColors.cardBg,
-        border: Border.all(color: PromoColors.blueStroke.withValues(alpha: 0.65)),
+        border: Border.all(
+          color: PromoColors.blueStroke.withValues(alpha: 0.65),
+        ),
       ),
       child: Row(
         children: [
@@ -2058,7 +2118,11 @@ class _ArchitectureArrow extends StatelessWidget {
               borderRadius: BorderRadius.circular(99),
             ),
           ),
-          const Icon(Icons.keyboard_arrow_down, color: PromoColors.cyan, size: 28),
+          const Icon(
+            Icons.keyboard_arrow_down,
+            color: PromoColors.cyan,
+            size: 28,
+          ),
         ],
       ),
     );
@@ -2200,15 +2264,24 @@ class _PreviewScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               Expanded(
-                                child: _PreviewBlock(color: spec.color, tall: true),
+                                child: _PreviewBlock(
+                                  color: spec.color,
+                                  tall: true,
+                                ),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Column(
                                   children: [
-                                    Expanded(child: _PreviewBlock(color: spec.color)),
+                                    Expanded(
+                                      child: _PreviewBlock(color: spec.color),
+                                    ),
                                     const SizedBox(height: 8),
-                                    Expanded(child: _PreviewBlock(color: PromoColors.cyan)),
+                                    Expanded(
+                                      child: _PreviewBlock(
+                                        color: PromoColors.cyan,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -2398,11 +2471,7 @@ class _CaseStrip extends StatelessWidget {
 
           return const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              copy,
-              SizedBox(height: 20),
-              topology,
-            ],
+            children: [copy, SizedBox(height: 20), topology],
           );
         },
       ),
@@ -2417,7 +2486,8 @@ class _BenefitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final number = double.tryParse(benefit.value.replaceAll(RegExp('[^0-9]'), '')) ?? 0;
+    final number =
+        double.tryParse(benefit.value.replaceAll(RegExp('[^0-9]'), '')) ?? 0;
     return _HoverGlowCard(
       padding: const EdgeInsets.all(22),
       borderColor: benefit.color.withValues(alpha: 0.28),
@@ -2584,21 +2654,26 @@ class _SmartFactoryBackgroundPainter extends CustomPainter {
     }
 
     final glowPaint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          PromoColors.electricBlue.withValues(alpha: 0.23),
-          Colors.transparent,
-        ],
-      ).createShader(
-        Rect.fromCircle(
-          center: Offset(size.width * (0.74 + math.sin(t * math.pi * 2) * 0.04), size.height * 0.32),
-          radius: size.width * 0.34,
-        ),
-      );
+      ..shader =
+          RadialGradient(
+            colors: [
+              PromoColors.electricBlue.withValues(alpha: 0.23),
+              Colors.transparent,
+            ],
+          ).createShader(
+            Rect.fromCircle(
+              center: Offset(
+                size.width * (0.74 + math.sin(t * math.pi * 2) * 0.04),
+                size.height * 0.32,
+              ),
+              radius: size.width * 0.34,
+            ),
+          );
     canvas.drawRect(rect, glowPaint);
 
     final floorY = size.height * 0.73;
-    final machinePaint = Paint()..color = const Color(0xFF12213A).withValues(alpha: 0.82);
+    final machinePaint = Paint()
+      ..color = const Color(0xFF12213A).withValues(alpha: 0.82);
     final edgePaint = Paint()
       ..color = PromoColors.cyan.withValues(alpha: 0.16)
       ..style = PaintingStyle.stroke
@@ -2613,8 +2688,16 @@ class _SmartFactoryBackgroundPainter extends CustomPainter {
       );
       canvas.drawRRect(r, machinePaint);
       canvas.drawRRect(r, edgePaint);
-      canvas.drawCircle(Offset(x + 18, floorY - h + 18), 5, Paint()..color = PromoColors.success.withValues(alpha: 0.75));
-      canvas.drawCircle(Offset(x + 35, floorY - h + 18), 5, Paint()..color = PromoColors.warning.withValues(alpha: 0.65));
+      canvas.drawCircle(
+        Offset(x + 18, floorY - h + 18),
+        5,
+        Paint()..color = PromoColors.success.withValues(alpha: 0.75),
+      );
+      canvas.drawCircle(
+        Offset(x + 35, floorY - h + 18),
+        5,
+        Paint()..color = PromoColors.warning.withValues(alpha: 0.65),
+      );
     }
 
     final conveyorPaint = Paint()
@@ -2631,13 +2714,30 @@ class _SmartFactoryBackgroundPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.4;
     for (var i = 0; i < 9; i++) {
-      final start = Offset(size.width * (0.12 + i * 0.09), floorY - 76 - (i % 2) * 36);
-      final end = Offset(size.width * (0.52 + math.sin(i) * 0.24), size.height * (0.14 + (i % 4) * 0.08));
+      final start = Offset(
+        size.width * (0.12 + i * 0.09),
+        floorY - 76 - (i % 2) * 36,
+      );
+      final end = Offset(
+        size.width * (0.52 + math.sin(i) * 0.24),
+        size.height * (0.14 + (i % 4) * 0.08),
+      );
       final path = Path()
         ..moveTo(start.dx, start.dy)
-        ..cubicTo(start.dx + 40, start.dy - 80, end.dx - 90, end.dy + 80, end.dx, end.dy);
+        ..cubicTo(
+          start.dx + 40,
+          start.dy - 80,
+          end.dx - 90,
+          end.dy + 80,
+          end.dx,
+          end.dy,
+        );
       canvas.drawPath(path, networkPaint);
-      canvas.drawCircle(end, 3.5, Paint()..color = PromoColors.cyan.withValues(alpha: 0.54));
+      canvas.drawCircle(
+        end,
+        3.5,
+        Paint()..color = PromoColors.cyan.withValues(alpha: 0.54),
+      );
     }
 
     final robotPaint = Paint()
@@ -2647,8 +2747,16 @@ class _SmartFactoryBackgroundPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
     final base = Offset(size.width * 0.18, floorY - 18);
     canvas.drawLine(base, base.translate(34, -70), robotPaint);
-    canvas.drawLine(base.translate(34, -70), base.translate(90, -112), robotPaint);
-    canvas.drawLine(base.translate(90, -112), base.translate(124, -80), robotPaint);
+    canvas.drawLine(
+      base.translate(34, -70),
+      base.translate(90, -112),
+      robotPaint,
+    );
+    canvas.drawLine(
+      base.translate(90, -112),
+      base.translate(124, -80),
+      robotPaint,
+    );
   }
 
   @override
@@ -2662,7 +2770,10 @@ class _LineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(painter: _LineChartPainter(), child: const SizedBox.expand());
+    return CustomPaint(
+      painter: _LineChartPainter(),
+      child: const SizedBox.expand(),
+    );
   }
 }
 
@@ -2680,7 +2791,10 @@ class _LineChartPainter extends CustomPainter {
     final values = [0.62, 0.44, 0.52, 0.39, 0.56, 0.35, 0.48, 0.31, 0.46, 0.28];
     final path = Path();
     for (var i = 0; i < values.length; i++) {
-      final p = Offset(size.width * i / (values.length - 1), size.height * values[i]);
+      final p = Offset(
+        size.width * i / (values.length - 1),
+        size.height * values[i],
+      );
       if (i == 0) {
         path.moveTo(p.dx, p.dy);
       } else {
@@ -2696,7 +2810,10 @@ class _LineChartPainter extends CustomPainter {
         ..strokeCap = StrokeCap.round,
     );
     for (var i = 0; i < values.length; i++) {
-      final p = Offset(size.width * i / (values.length - 1), size.height * values[i]);
+      final p = Offset(
+        size.width * i / (values.length - 1),
+        size.height * values[i],
+      );
       canvas.drawCircle(p, 3.5, Paint()..color = PromoColors.electricBlue);
     }
   }
@@ -2710,7 +2827,10 @@ class _DonutChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(painter: _DonutChartPainter(), child: const SizedBox.expand());
+    return CustomPaint(
+      painter: _DonutChartPainter(),
+      child: const SizedBox.expand(),
+    );
   }
 }
 
@@ -2732,18 +2852,32 @@ class _DonutChartPainter extends CustomPainter {
     for (final segment in segments) {
       paint.color = segment.$2;
       final sweep = math.pi * 2 * segment.$1;
-      canvas.drawArc(Rect.fromCircle(center: center, radius: radius), start, sweep - 0.08, false, paint);
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        start,
+        sweep - 0.08,
+        false,
+        paint,
+      );
       start += sweep;
     }
     final textPainter = TextPainter(
       text: const TextSpan(
         text: '98.2%\nOK',
-        style: TextStyle(color: PromoColors.textOnDark, fontSize: 17, fontWeight: FontWeight.w900, height: 1.25),
+        style: TextStyle(
+          color: PromoColors.textOnDark,
+          fontSize: 17,
+          fontWeight: FontWeight.w900,
+          height: 1.25,
+        ),
       ),
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     )..layout();
-    textPainter.paint(canvas, center - Offset(textPainter.width / 2, textPainter.height / 2));
+    textPainter.paint(
+      canvas,
+      center - Offset(textPainter.width / 2, textPainter.height / 2),
+    );
   }
 
   @override
@@ -2755,7 +2889,10 @@ class _GaugeChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(painter: _GaugeChartPainter(), child: const SizedBox.expand());
+    return CustomPaint(
+      painter: _GaugeChartPainter(),
+      child: const SizedBox.expand(),
+    );
   }
 }
 
@@ -2783,7 +2920,10 @@ class _GaugeChartPainter extends CustomPainter {
         ..color = PromoColors.success,
     );
     final angle = math.pi + math.pi * 0.886;
-    final needle = Offset(center.dx + math.cos(angle) * radius * 0.82, center.dy + math.sin(angle) * radius * 0.82);
+    final needle = Offset(
+      center.dx + math.cos(angle) * radius * 0.82,
+      center.dy + math.sin(angle) * radius * 0.82,
+    );
     canvas.drawLine(
       center,
       needle,
@@ -2793,10 +2933,20 @@ class _GaugeChartPainter extends CustomPainter {
     );
     canvas.drawCircle(center, 5, Paint()..color = PromoColors.cyan);
     final tp = TextPainter(
-      text: const TextSpan(text: '88.6', style: TextStyle(color: PromoColors.textOnDark, fontSize: 24, fontWeight: FontWeight.w900)),
+      text: const TextSpan(
+        text: '88.6',
+        style: TextStyle(
+          color: PromoColors.textOnDark,
+          fontSize: 24,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
       textDirection: TextDirection.ltr,
     )..layout();
-    tp.paint(canvas, Offset(center.dx - tp.width / 2, center.dy - radius * 0.65));
+    tp.paint(
+      canvas,
+      Offset(center.dx - tp.width / 2, center.dy - radius * 0.65),
+    );
   }
 
   @override
@@ -2808,7 +2958,10 @@ class _BarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(painter: _BarChartPainter(), child: const SizedBox.expand());
+    return CustomPaint(
+      painter: _BarChartPainter(),
+      child: const SizedBox.expand(),
+    );
   }
 }
 
@@ -2838,7 +2991,10 @@ class _MachinePainterBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(painter: _MachinePainter(), child: const SizedBox.expand());
+    return CustomPaint(
+      painter: _MachinePainter(),
+      child: const SizedBox.expand(),
+    );
   }
 }
 
@@ -2852,22 +3008,44 @@ class _MachinePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
     final base = RRect.fromRectAndRadius(
-      Rect.fromLTWH(size.width * 0.08, size.height * 0.58, size.width * 0.84, size.height * 0.16),
+      Rect.fromLTWH(
+        size.width * 0.08,
+        size.height * 0.58,
+        size.width * 0.84,
+        size.height * 0.16,
+      ),
       const Radius.circular(12),
     );
     canvas.drawRRect(base, machine);
     canvas.drawRRect(base, stroke);
     for (var i = 0; i < 3; i++) {
       final cell = RRect.fromRectAndRadius(
-        Rect.fromLTWH(size.width * (0.14 + i * 0.25), size.height * 0.28, size.width * 0.18, size.height * 0.28),
+        Rect.fromLTWH(
+          size.width * (0.14 + i * 0.25),
+          size.height * 0.28,
+          size.width * 0.18,
+          size.height * 0.28,
+        ),
         const Radius.circular(10),
       );
       canvas.drawRRect(cell, machine);
       canvas.drawRRect(cell, stroke);
-      canvas.drawCircle(Offset(size.width * (0.22 + i * 0.25), size.height * 0.42), 8, accent);
+      canvas.drawCircle(
+        Offset(size.width * (0.22 + i * 0.25), size.height * 0.42),
+        8,
+        accent,
+      );
     }
-    canvas.drawLine(Offset(size.width * 0.2, size.height * 0.24), Offset(size.width * 0.5, size.height * 0.1), stroke);
-    canvas.drawLine(Offset(size.width * 0.5, size.height * 0.1), Offset(size.width * 0.8, size.height * 0.24), stroke);
+    canvas.drawLine(
+      Offset(size.width * 0.2, size.height * 0.24),
+      Offset(size.width * 0.5, size.height * 0.1),
+      stroke,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.5, size.height * 0.1),
+      Offset(size.width * 0.8, size.height * 0.24),
+      stroke,
+    );
   }
 
   @override
@@ -2879,14 +3057,20 @@ class _FactoryTopologyMiniMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(painter: _TopologyPainter(), child: const SizedBox.expand());
+    return CustomPaint(
+      painter: _TopologyPainter(),
+      child: const SizedBox.expand(),
+    );
   }
 }
 
 class _TopologyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final bg = RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(20));
+    final bg = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      const Radius.circular(20),
+    );
     canvas.drawRRect(bg, Paint()..color = const Color(0xFF071224));
     final grid = Paint()
       ..color = PromoColors.cyan.withValues(alpha: 0.06)
@@ -2912,7 +3096,11 @@ class _TopologyPainter extends CustomPainter {
     }
     for (var i = 0; i < points.length; i++) {
       final color = i == 3 ? PromoColors.warning : PromoColors.success;
-      canvas.drawCircle(points[i], 18, Paint()..color = color.withValues(alpha: 0.18));
+      canvas.drawCircle(
+        points[i],
+        18,
+        Paint()..color = color.withValues(alpha: 0.18),
+      );
       canvas.drawCircle(points[i], 7, Paint()..color = color);
     }
   }
@@ -2976,7 +3164,8 @@ class _MiniTrendPainter extends CustomPainter {
     final path = Path();
     for (var i = 0; i < 8; i++) {
       final x = size.width * i / 7;
-      final y = size.height * (0.62 - math.sin(i * 0.9) * 0.22 + (i % 2) * 0.05);
+      final y =
+          size.height * (0.62 - math.sin(i * 0.9) * 0.22 + (i % 2) * 0.05);
       if (i == 0) {
         path.moveTo(x, y);
       } else {
@@ -2987,7 +3176,8 @@ class _MiniTrendPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MiniTrendPainter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(covariant _MiniTrendPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 class _MiniBarsPainter extends CustomPainter {
@@ -3003,7 +3193,12 @@ class _MiniBarsPainter extends CustomPainter {
       final h = size.height * vals[i];
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromLTWH(size.width * (i + 0.7) / vals.length, size.height - h, bar, h),
+          Rect.fromLTWH(
+            size.width * (i + 0.7) / vals.length,
+            size.height - h,
+            bar,
+            h,
+          ),
           const Radius.circular(4),
         ),
         Paint()..color = color.withValues(alpha: 0.85),
@@ -3012,5 +3207,6 @@ class _MiniBarsPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MiniBarsPainter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(covariant _MiniBarsPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
