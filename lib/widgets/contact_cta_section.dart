@@ -7,8 +7,8 @@ import 'section_title.dart';
 class ContactCtaSection extends StatelessWidget {
   const ContactCtaSection({super.key});
 
-  Future<void> _openEmail(String subject) async {
-    final uri = PromoContact.mailtoUri(subject: subject);
+  Future<void> _openEmail() async {
+    final uri = PromoContact.mailtoUri();
     await launchUrl(uri);
   }
 
@@ -21,10 +21,8 @@ class ContactCtaSection extends StatelessWidget {
       child: Column(
         children: [
           const SectionTitle(
-            title: '현장에 맞는 모니터링 시스템이 필요하신가요?',
-            subtitle:
-                '생산라인의 작업순서, 설비 데이터, 검사 결과, CSV 이력, 그래프 관리가 필요하다면 '
-                '현장 상황에 맞춰 PC 기반 모니터링 시스템을 기획하고 개발할 수 있습니다.',
+            title: '공장 자동화 및 모니터링 시스템 구축이 필요하신가요?',
+            subtitle: '귀사의 생산 환경에 맞는 맞춤형 시스템을 제안드립니다.',
             light: true,
           ),
           const SizedBox(height: 40),
@@ -34,27 +32,27 @@ class ContactCtaSection extends StatelessWidget {
             alignment: WrapAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () => _openEmail('산업자동화 모니터링 시스템 상담 문의'),
+                onPressed: _openEmail,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: PromoColors.teal,
                   minimumSize: const Size(200, 48),
                 ),
-                child: const Text('이메일 상담'),
+                child: const Text('상담 문의하기'),
               ),
               OutlinedButton(
-                onPressed: () => _openEmail('포트폴리오 문의'),
+                onPressed: _openEmail,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: PromoColors.textOnDark,
                   side: const BorderSide(color: PromoColors.tealAccent),
                   minimumSize: const Size(200, 48),
                 ),
-                child: const Text('포트폴리오 문의'),
+                child: const Text('데모 요청하기'),
               ),
             ],
           ),
           const SizedBox(height: 24),
           InkWell(
-            onTap: () => _openEmail('산업자동화 모니터링 시스템 문의'),
+            onTap: _openEmail,
             borderRadius: BorderRadius.circular(6),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

@@ -7,7 +7,7 @@ class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
 
   Future<void> _openEmail() async {
-    final uri = PromoContact.mailtoUri(subject: '산업자동화 모니터링 시스템 문의');
+    final uri = PromoContact.mailtoUri();
     await launchUrl(uri);
   }
 
@@ -30,14 +30,14 @@ class FooterSection extends StatelessWidget {
                 const Divider(color: PromoColors.charcoal, height: 1),
                 const SizedBox(height: 32),
                 Text(
-                  '소통웨어 산업자동화',
+                  '소통웨어(SotongWare)',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: PromoColors.textOnDark,
                   ),
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Sotong Automation Monitoring System',
+                  '산업자동화 모니터링 시스템',
                   style: TextStyle(
                     color: PromoColors.tealAccent,
                     fontSize: 14,
@@ -46,7 +46,7 @@ class FooterSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Production Line Monitoring / PLC / MES / Barcode / Tool Data',
+                  'Production Line Monitoring / PLC / MES / SCADA / AI',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: PromoColors.textMutedOnDark,
@@ -55,10 +55,11 @@ class FooterSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Public Promo Site',
+                  '문의',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: PromoColors.textMutedOnDark,
+                    color: PromoColors.tealAccent,
                     fontSize: 12,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: 16),
