@@ -5,6 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../data/promo_contact.dart';
 import '../theme/promo_theme.dart';
+import 'software_preview_layouts.dart';
+import 'sotong_control_hub_section.dart';
 
 class IndustrialLandingPage extends StatefulWidget {
   const IndustrialLandingPage({super.key});
@@ -23,6 +25,7 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
   final _previewKey = GlobalKey();
   final _casesKey = GlobalKey();
   final _benefitsKey = GlobalKey();
+  final _hubKey = GlobalKey();
   final _contactKey = GlobalKey();
   late final AnimationController _pulseController;
   bool _loading = true;
@@ -50,6 +53,14 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
 
   Future<void> _openEmail() async {
     await launchUrl(PromoContact.mailtoUri());
+  }
+
+  Future<void> _openHubInquiry() async {
+    await launchUrl(PromoContact.hubInquiryUri());
+  }
+
+  Future<void> _openHubDemo() async {
+    await launchUrl(PromoContact.hubDemoUri());
   }
 
   void _scrollTo(GlobalKey key) {
@@ -91,7 +102,8 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                     _NavButton('소프트웨어 화면', () => _scrollTo(_previewKey)),
                     _NavButton('적용사례', () => _scrollTo(_casesKey)),
                     _NavButton('도입효과', () => _scrollTo(_benefitsKey)),
-                    _NavButton('문의하기', _openEmail),
+                    _NavButton('소통총관제', () => _scrollTo(_hubKey)),
+                    _NavButton('문의하기', _openHubInquiry),
                   ],
                   Padding(
                     padding: const EdgeInsets.only(right: 24, left: 10),
@@ -153,10 +165,19 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
               ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
+                  key: _hubKey,
+                  child: SotongControlHubSection(
+                    onInquiry: _openHubInquiry,
+                    onDemo: _openHubDemo,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: KeyedSubtree(
                   key: _contactKey,
                   child: _ContactSection(
-                    onDemo: _openEmail,
-                    onConsult: _openEmail,
+                    onDemo: _openHubDemo,
+                    onConsult: _openHubInquiry,
                   ),
                 ),
               ),
@@ -909,25 +930,6 @@ class _ArchitectureSection extends StatelessWidget {
 class _SoftwarePreviewSection extends StatelessWidget {
   const _SoftwarePreviewSection();
 
-  static const previews = [
-    _PreviewSpec(
-      'Dashboard',
-      Icons.dashboard_customize,
-      PromoColors.electricBlue,
-    ),
-    _PreviewSpec('Alarm', Icons.warning_amber_rounded, PromoColors.alarm),
-    _PreviewSpec('Trend', Icons.show_chart, PromoColors.cyan),
-    _PreviewSpec('Report', Icons.summarize_outlined, PromoColors.success),
-    _PreviewSpec(
-      'Production',
-      Icons.precision_manufacturing,
-      PromoColors.warning,
-    ),
-    _PreviewSpec('Recipe', Icons.tune, PromoColors.purple),
-    _PreviewSpec('SPC', Icons.query_stats, PromoColors.cyan),
-    _PreviewSpec('History', Icons.history, PromoColors.electricBlue),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return _SectionShell(
@@ -938,7 +940,8 @@ class _SoftwarePreviewSection extends StatelessWidget {
             eyebrow: 'SOFTWARE SCREEN PREVIEW',
             title: '소프트웨어 미리보기',
             subtitle:
-                '실제 산업자동화 모니터링 프로그램처럼 대시보드, 알람, 트렌드, 리포트, 생산, 레시피, SPC, 이력 화면을 구성했습니다.',
+                '대시보드, 알람, 트렌드, 리포트, 생산, 레시피, SPC, 이력 — '
+                '각 화면 유형에 맞는 전용 레이아웃으로 구성했습니다.',
           ),
           const SizedBox(height: 46),
           LayoutBuilder(
@@ -955,13 +958,10 @@ class _SoftwarePreviewSection extends StatelessWidget {
                 spacing: gap,
                 runSpacing: gap,
                 children: [
-                  for (var i = 0; i < previews.length; i++)
+                  for (final preview in SoftwarePreviewData.items)
                     SizedBox(
                       width: width,
-                      child: _SoftwarePreviewCard(
-                        preview: previews[i],
-                        index: i,
-                      ),
+                      child: _SoftwarePreviewCard(preview: preview),
                     ),
                 ],
               );
@@ -1218,8 +1218,8 @@ class _ContactSection extends StatelessWidget {
             Column(
               children: [
                 const _StatusPill(
-                  label: 'REQUEST A DEMO',
-                  icon: Icons.rocket_launch_outlined,
+                  label: 'SOTONG HUB · REQUEST A DEMO',
+                  icon: Icons.hub_outlined,
                 ),
                 const SizedBox(height: 22),
                 Text(
@@ -1234,6 +1234,17 @@ class _ContactSection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+                const Text(
+                  '문의는 소통총관제로 접수되어 검토·피드백·후속 지시까지 연계됩니다.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: PromoColors.cyan,
+                    fontSize: 16,
+                    height: 1.6,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 16),
                 const Text(
                   '귀사의 생산 환경에 맞는 맞춤형 시스템을 제안드립니다.',
                   textAlign: TextAlign.center,
@@ -1272,13 +1283,13 @@ class _ContactSection extends StatelessWidget {
                   alignment: WrapAlignment.center,
                   children: [
                     _ActionButton(
-                      label: '상담 문의하기',
+                      label: '소통총관제 상담 문의',
                       icon: Icons.support_agent,
                       onPressed: onConsult,
                       large: true,
                     ),
                     _GhostButton(
-                      label: '데모 요청하기',
+                      label: '데모 요청 (총관제 접수)',
                       icon: Icons.play_arrow_rounded,
                       onPressed: onDemo,
                       large: true,
@@ -2359,10 +2370,9 @@ class _ArchitectureArrow extends StatelessWidget {
 }
 
 class _SoftwarePreviewCard extends StatelessWidget {
-  const _SoftwarePreviewCard({required this.preview, required this.index});
+  const _SoftwarePreviewCard({required this.preview});
 
-  final _PreviewSpec preview;
-  final int index;
+  final SoftwarePreviewSpec preview;
 
   @override
   Widget build(BuildContext context) {
@@ -2384,205 +2394,47 @@ class _SoftwarePreviewCard extends StatelessWidget {
                   colors: [Color(0xFF101F37), Color(0xFF071224)],
                 ),
               ),
-              child: _PreviewScreen(spec: preview, index: index),
+              child: SoftwarePreviewScreen(spec: preview),
             ),
             Padding(
               padding: const EdgeInsets.all(18),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(preview.icon, color: preview.color, size: 22),
-                  const SizedBox(width: 10),
-                  Text(
-                    preview.title,
-                    style: const TextStyle(
-                      color: PromoColors.textOnDark,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                    ),
+                  Row(
+                    children: [
+                      Icon(preview.icon, color: preview.color, size: 22),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          preview.title,
+                          style: const TextStyle(
+                            color: PromoColors.textOnDark,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward,
+                        color: PromoColors.textMutedOnDark,
+                        size: 18,
+                      ),
+                    ],
                   ),
-                  const Spacer(),
-                  const Icon(
-                    Icons.arrow_forward,
-                    color: PromoColors.textMutedOnDark,
-                    size: 18,
+                  const SizedBox(height: 6),
+                  Text(
+                    preview.subtitle,
+                    style: const TextStyle(
+                      color: PromoColors.textMutedOnDark,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _PreviewScreen extends StatelessWidget {
-  const _PreviewScreen({required this.spec, required this.index});
-
-  final _PreviewSpec spec;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF050B16),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-      ),
-      child: Column(
-        children: [
-          Container(
-            height: 34,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
-              ),
-            ),
-            child: Row(
-              children: [
-                const _TrafficLights(),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    '${spec.title.toUpperCase()} / PLANT OPS',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: PromoColors.textMutedOnDark,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 44,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.04),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        for (var i = 0; i < 4; i++)
-                          Icon(
-                            i == index % 4 ? spec.icon : Icons.circle,
-                            color: i == index % 4
-                                ? spec.color
-                                : Colors.white.withValues(alpha: 0.2),
-                            size: i == index % 4 ? 18 : 8,
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: _PreviewBlock(
-                                  color: spec.color,
-                                  tall: true,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: _PreviewBlock(color: spec.color),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Expanded(
-                                      child: _PreviewBlock(
-                                        color: PromoColors.cyan,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          height: 42,
-                          child: Row(
-                            children: [
-                              for (var i = 0; i < 5; i++) ...[
-                                Expanded(
-                                  child: _PreviewBar(
-                                    color: i == index % 5
-                                        ? spec.color
-                                        : PromoColors.blueStroke,
-                                  ),
-                                ),
-                                if (i < 4) const SizedBox(width: 6),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PreviewBlock extends StatelessWidget {
-  const _PreviewBlock({required this.color, this.tall = false});
-
-  final Color color;
-  final bool tall;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.045),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.18)),
-      ),
-      child: CustomPaint(
-        painter: tall ? _MiniTrendPainter(color) : _MiniBarsPainter(color),
-        child: const SizedBox.expand(),
-      ),
-    );
-  }
-}
-
-class _PreviewBar extends StatelessWidget {
-  const _PreviewBar({required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.16),
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: color.withValues(alpha: 0.18)),
       ),
     );
   }
@@ -2828,14 +2680,6 @@ class _IconSpec {
   final String title;
   final String subtitle;
   final IconData icon;
-}
-
-class _PreviewSpec {
-  const _PreviewSpec(this.title, this.icon, this.color);
-
-  final String title;
-  final IconData icon;
-  final Color color;
 }
 
 class _ArchitectureLayer {
@@ -3377,65 +3221,4 @@ class _CtaCircuitPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _MiniTrendPainter extends CustomPainter {
-  _MiniTrendPainter(this.color);
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 2.2
-      ..style = PaintingStyle.stroke;
-    final path = Path();
-    for (var i = 0; i < 8; i++) {
-      final x = size.width * i / 7;
-      final y =
-          size.height * (0.62 - math.sin(i * 0.9) * 0.22 + (i % 2) * 0.05);
-      if (i == 0) {
-        path.moveTo(x, y);
-      } else {
-        path.lineTo(x, y);
-      }
-    }
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _MiniTrendPainter oldDelegate) =>
-      oldDelegate.color != color;
-}
-
-class _MiniBarsPainter extends CustomPainter {
-  _MiniBarsPainter(this.color);
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const vals = [0.3, 0.62, 0.46, 0.78, 0.54];
-    final bar = size.width / 9;
-    for (var i = 0; i < vals.length; i++) {
-      final h = size.height * vals[i];
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(
-            size.width * (i + 0.7) / vals.length,
-            size.height - h,
-            bar,
-            h,
-          ),
-          const Radius.circular(4),
-        ),
-        Paint()..color = color.withValues(alpha: 0.85),
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _MiniBarsPainter oldDelegate) =>
-      oldDelegate.color != color;
 }
