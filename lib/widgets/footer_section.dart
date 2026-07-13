@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../data/promo_contact.dart';
 import '../theme/promo_theme.dart';
+import 'sotong_brand_logo.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
@@ -29,15 +30,15 @@ class FooterSection extends StatelessWidget {
               children: [
                 const Divider(color: PromoColors.charcoal, height: 1),
                 const SizedBox(height: 32),
-                Text(
-                  '소통웨어(SotongWare)',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: PromoColors.textOnDark,
-                  ),
+                const SotongBrandLogo(
+                  variant: SotongLogoVariant.full,
+                  height: 96,
+                  maxWidth: 140,
+                  onLightPlate: true,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 const Text(
-                  '산업자동화 모니터링 시스템',
+                  '산업자동화 소프트웨어',
                   style: TextStyle(
                     color: PromoColors.tealAccent,
                     fontSize: 14,

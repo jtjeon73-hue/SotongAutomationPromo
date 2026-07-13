@@ -4,8 +4,8 @@
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0D1B2A",
-    "theme_color": "#00897B",
-    "description": "생산라인 모니터링 시스템 홍보사이트",
+    "theme_color": "#1B4F9C",
+    "description": "맞춤형 산업자동화 소프트웨어 홍보사이트",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

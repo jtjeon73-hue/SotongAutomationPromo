@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../data/promo_contact.dart';
 import '../theme/promo_theme.dart';
 import 'software_preview_layouts.dart';
+import 'sotong_brand_logo.dart';
 import 'sotong_control_hub_section.dart';
 
 class IndustrialLandingPage extends StatefulWidget {
@@ -201,33 +202,25 @@ class _BrandMark extends StatelessWidget {
       builder: (context, constraints) {
         final compact =
             constraints.maxWidth < 180 ||
-            MediaQuery.sizeOf(context).width < 420;
+            MediaQuery.sizeOf(context).width < 720;
 
-        return Row(
+        if (compact) {
+          return const SotongBrandLogo(
+            variant: SotongLogoVariant.symbol,
+            height: 34,
+            onLightPlate: true,
+          );
+        }
+
+        return const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: compact ? 30 : 34,
-              height: compact ? 30 : 34,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: const LinearGradient(
-                  colors: [PromoColors.electricBlue, PromoColors.cyan],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: PromoColors.electricBlue.withValues(alpha: 0.36),
-                    blurRadius: 22,
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.factory,
-                color: Colors.white,
-                size: compact ? 17 : 19,
-              ),
+            SotongBrandLogo(
+              variant: SotongLogoVariant.symbol,
+              height: 36,
+              onLightPlate: true,
             ),
-            SizedBox(width: compact ? 8 : 12),
+            SizedBox(width: 12),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,26 +232,24 @@ class _BrandMark extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: PromoColors.textOnDark,
-                      fontSize: compact ? 16 : 17,
+                      fontSize: 17,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -0.2,
                     ),
                   ),
-                  if (!compact) ...[
-                    const SizedBox(height: 1),
-                    const Text(
-                      '산업자동화 소프트웨어',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: false,
-                      style: TextStyle(
-                        color: PromoColors.cyan,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.4,
-                      ),
+                  SizedBox(height: 1),
+                  Text(
+                    '산업자동화 소프트웨어',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    style: TextStyle(
+                      color: PromoColors.cyan,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.4,
                     ),
-                  ],
+                  ),
                 ],
               ),
             ),
@@ -392,11 +383,13 @@ class _HeroCopy extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _StatusPill(
-          label: '맞춤형 산업자동화 소프트웨어',
-          icon: Icons.precision_manufacturing_outlined,
+        SotongBrandLogo(
+          variant: SotongLogoVariant.full,
+          height: isDesktop ? 118 : 96,
+          maxWidth: isDesktop ? 168 : 140,
+          onLightPlate: true,
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 28),
         Text(
           '현장 데이터를 연결하여\n제조·생산 업무를 더 편리하게',
           style: TextStyle(
@@ -1348,20 +1341,16 @@ class _Footer extends StatelessWidget {
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text(
-              '소통웨어(SotongWare)',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: PromoColors.textOnDark,
-                fontSize: 16,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.1,
-              ),
+          children: [
+            const SotongBrandLogo(
+              variant: SotongLogoVariant.full,
+              height: 110,
+              maxWidth: 160,
+              onLightPlate: true,
             ),
-            SizedBox(height: 8),
-            Text(
-              '산업자동화 모니터링 시스템',
+            const SizedBox(height: 18),
+            const Text(
+              '산업자동화 소프트웨어',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: PromoColors.textMutedOnDark,
@@ -1370,8 +1359,8 @@ class _Footer extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(height: 14),
-            Text(
+            const SizedBox(height: 14),
+            const Text(
               '문의',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -1381,8 +1370,8 @@ class _Footer extends StatelessWidget {
                 letterSpacing: 1,
               ),
             ),
-            SizedBox(height: 6),
-            Text(
+            const SizedBox(height: 6),
+            const Text(
               PromoContact.email,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -1392,8 +1381,8 @@ class _Footer extends StatelessWidget {
                 letterSpacing: 0.2,
               ),
             ),
-            SizedBox(height: 18),
-            Text(
+            const SizedBox(height: 18),
+            const Text(
               'PLC · 설비 데이터 수집 · 모니터링 · 이력 관리 · MES·ERP 연계 확장',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -2652,32 +2641,29 @@ class _LoadingOverlay extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SotongBrandLogo(
+              variant: SotongLogoVariant.full,
+              height: 96,
+              maxWidth: 140,
+              onLightPlate: true,
+            ),
+            const SizedBox(height: 22),
             TweenAnimationBuilder<double>(
               duration: const Duration(milliseconds: 850),
               tween: Tween(begin: 0, end: 1),
               builder: (context, value, _) {
-                return Transform.rotate(
-                  angle: value * math.pi * 2,
-                  child: Container(
-                    width: 58,
-                    height: 58,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: PromoColors.cyan.withValues(alpha: 0.18),
-                        width: 7,
-                      ),
-                    ),
-                    child: CircularProgressIndicator(
-                      value: value,
-                      strokeWidth: 3,
-                      color: PromoColors.cyan,
-                    ),
+                return SizedBox(
+                  width: 36,
+                  height: 36,
+                  child: CircularProgressIndicator(
+                    value: value,
+                    strokeWidth: 2.5,
+                    color: PromoColors.cyan,
                   ),
                 );
               },
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             const Text(
               '산업자동화 소프트웨어 준비 중',
               style: TextStyle(
