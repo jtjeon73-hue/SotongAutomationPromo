@@ -131,6 +131,7 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                   child: const _FeatureSection(),
                 ),
               ),
+              const SliverToBoxAdapter(child: _DeviceIntegrationSection()),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
                   key: _architectureKey,
@@ -431,14 +432,14 @@ class _HeroCopy extends StatelessWidget {
           spacing: 10,
           runSpacing: 10,
           children: const [
-            _KeywordChip('PLC 연동'),
-            _KeywordChip('설비 데이터 수집'),
-            _KeywordChip('실시간 상태 표시'),
+            _KeywordChip('PLC·장비 연동'),
+            _KeywordChip('작업자 중심 화면'),
+            _KeywordChip('작업 순서 안내'),
+            _KeywordChip('설비 상태·결과 확인'),
             _KeywordChip('생산 데이터 저장'),
             _KeywordChip('이력 조회'),
-            _KeywordChip('작업자 편의성'),
-            _KeywordChip('관리 효율 향상'),
-            _KeywordChip('맞춤형 소프트웨어'),
+            _KeywordChip('작업 편의성'),
+            _KeywordChip('맞춤형 개발'),
             _KeywordChip('MES·ERP 연계 확장'),
           ],
         ),
@@ -683,34 +684,55 @@ class _IntroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width > 760;
+
     return _SectionShell(
       child: Column(
         children: [
           const _SectionHeading(
             eyebrow: '시스템 소개',
-            title: '현장 설비 데이터를 모아 보기 쉽게 만들고 관리합니다',
+            title: '현장 데이터 관리와 작업 편의성을 함께 높이는 산업자동화 소프트웨어',
             subtitle:
-                'PLC와 생산설비에서 발생하는 데이터를 현장 PC에서 수집하고, 화면에 표시하며, 저장·조회할 수 있는 맞춤형 산업자동화 소프트웨어를 개발합니다.',
+                '소통웨어 산업자동화 소프트웨어는 생산설비와 각종 장비에서 발생하는 데이터를 수집해 작업자가 보기 쉬운 화면으로 구성하고, 필요한 정보를 저장·조회·관리할 수 있도록 맞춤 개발합니다.',
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: 28),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Text(
+              '단순히 현장 데이터를 화면에 표시하는 데 그치지 않고, 작업 순서·설비 상태·설정값·생산 결과·오류 정보를 작업자가 빠르게 확인하고 조작할 수 있도록 구성하여 생산 작업을 원활하게 진행할 수 있는 화면을 만듭니다. '
+              '관리자는 생산 현황과 작업 이력을 체계적으로 확인할 수 있으며, 축적된 데이터는 필요에 따라 MES·ERP·사내 서버·데이터베이스와 연계할 수 있는 확장 구조로 개발합니다. '
+              '업체별 공정과 설비 환경에 맞춘 맞춤형 개발로 현장 작업 편의성과 생산관리 효율을 함께 높입니다.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.textMutedOnDark.withValues(alpha: 0.95),
+                fontSize: isWide ? 15.5 : 14.5,
+                height: 1.75,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SizedBox(height: 44),
           LayoutBuilder(
             builder: (context, constraints) {
-              final isWide = constraints.maxWidth > 980;
+              final wideLayout = constraints.maxWidth > 980;
               final cards = const [
                 _IntroCard(
                   icon: Icons.settings_input_component,
-                  title: '설비 데이터 수집',
-                  description: 'PLC, 센서, 계측기, 체결기, 검사장비 데이터를 통신으로 수집합니다.',
+                  title: '설비·장비 데이터 수집',
+                  description:
+                      'PLC, 바코드·체결 Tool, 검사장비, 계측기, 센서 등에서 필요한 데이터를 통신으로 수집합니다.',
                 ),
                 _IntroCard(
-                  icon: Icons.desktop_windows_outlined,
-                  title: '현장 모니터링',
-                  description: '설비 상태, 생산 수량, 작업 결과, 경보를 작업자 화면으로 제공합니다.',
+                  icon: Icons.touch_app_outlined,
+                  title: '작업자가 보기 쉬운 화면',
+                  description:
+                      '설비 상태와 작업 결과를 확인하고, 작업을 원활하게 진행할 수 있는 현장 화면을 구성합니다.',
                 ),
                 _IntroCard(
                   icon: Icons.folder_shared_outlined,
-                  title: '저장·조회·확장',
-                  description: '생산·이력 데이터를 관리하고, 필요 시 MES·ERP와 연계할 수 있습니다.',
+                  title: '저장·이력·확장 관리',
+                  description:
+                      '생산정보 저장 및 이력 조회로 관리자 업무와 생산관리 효율을 높이고, 필요 시 상위 시스템과 연계합니다.',
                 ),
               ];
 
@@ -723,8 +745,9 @@ class _IntroSection extends StatelessWidget {
                 ],
               );
 
-              if (isWide) {
+              if (wideLayout) {
                 return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Expanded(flex: 6, child: _ControlRoomCard()),
                     const SizedBox(width: 24),
@@ -742,6 +765,138 @@ class _IntroSection extends StatelessWidget {
               );
             },
           ),
+          const SizedBox(height: 28),
+          const _WorkerFocusPanel(),
+        ],
+      ),
+    );
+  }
+}
+
+class _WorkerFocusPanel extends StatelessWidget {
+  const _WorkerFocusPanel();
+
+  static const items = [
+    '작업 시작 및 완료 상태 확인',
+    '공정별 작업 순서 안내',
+    '제품 또는 작업 모델 선택',
+    '작업 조건과 설정값 표시',
+    '생산 수량과 작업 결과 확인',
+    '정상·비정상 결과 구분',
+    '오류와 경보 내용 확인',
+    '재작업·확인 필요 항목 안내',
+    '바코드 입력에 따른 제품정보 표시',
+    '반복 입력·수기 기록 최소화',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return _HoverGlowCard(
+      padding: const EdgeInsets.all(26),
+      borderColor: PromoColors.cyan.withValues(alpha: 0.35),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  color: PromoColors.electricBlue.withValues(alpha: 0.14),
+                ),
+                child: const Icon(
+                  Icons.engineering,
+                  color: PromoColors.cyan,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Text(
+                  '작업자 중심의 현장 화면',
+                  style: TextStyle(
+                    color: PromoColors.textOnDark,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          const Text(
+            '현장 작업자가 필요한 정보를 빠르게 확인하고 생산 작업을 원활하게 진행할 수 있도록, 설비 상태·작업 순서·설정값·생산 결과·오류 내용을 직관적인 화면으로 구성합니다. '
+            '아래 항목은 업체 요구와 공정 환경에 따라 맞춤 개발할 수 있는 구성 예시입니다.',
+            style: TextStyle(
+              color: PromoColors.textMutedOnDark,
+              fontSize: 14.5,
+              height: 1.65,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 20),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth > 900
+                  ? 3
+                  : constraints.maxWidth > 560
+                  ? 2
+                  : 1;
+              const gap = 10.0;
+              final width =
+                  (constraints.maxWidth - (columns - 1) * gap) / columns;
+              return Wrap(
+                spacing: gap,
+                runSpacing: gap,
+                children: [
+                  for (final item in items)
+                    SizedBox(
+                      width: width,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 11,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF071224),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: Icon(
+                                Icons.check_circle_outline,
+                                size: 15,
+                                color: PromoColors.cyan,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  color: PromoColors.textOnDark,
+                                  fontSize: 13,
+                                  height: 1.4,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
         ],
       ),
     );
@@ -753,38 +908,43 @@ class _FeatureSection extends StatelessWidget {
 
   static const features = [
     _IconSpec(
-      'PLC·설비 데이터 연동',
-      'PLC, 센서, 계측기, 체결기, 검사장비 등에서 발생하는 데이터를 통신을 통해 수집합니다.',
+      '현장 장비 데이터 연동',
+      'PLC뿐 아니라 바코드·체결 Tool·검사장비·계측기·센서 등 통신 가능한 현장 장비 데이터를 수집하도록 개발합니다.',
       Icons.settings_input_component,
     ),
     _IconSpec(
+      '작업자 중심 현장 화면',
+      '작업 순서·설정값·설비 상태·생산 결과를 작업자가 보기 쉬운 화면으로 구성해 작업을 원활하게 지원합니다.',
+      Icons.touch_app_outlined,
+    ),
+    _IconSpec(
       '현장 모니터링 화면',
-      '설비 상태, 생산 수량, 측정값, 작업 결과, 경보 상태를 작업자가 보기 쉬운 화면으로 제공합니다.',
+      '설비 상태, 생산 수량, 측정값, 작업 결과, 경보 상태를 한눈에 확인할 수 있는 화면을 제공합니다.',
       Icons.monitor_heart_outlined,
     ),
     _IconSpec(
       '데이터 저장 및 이력 조회',
-      '수집된 생산정보와 설비 데이터를 저장하고 날짜, 설비, 제품, 작업 조건 등에 따라 조회합니다.',
+      '생산정보를 저장하고 날짜·설비·제품·작업자 등 조건으로 이력을 조회할 수 있도록 구성합니다.',
       Icons.storage,
     ),
     _IconSpec(
-      '작업 편의성 개선',
-      '작업 순서 안내, 설정값 관리, 오류 메시지, 작업 결과 확인 등 현장 작업자가 쉽게 사용할 수 있는 기능을 구성합니다.',
-      Icons.touch_app_outlined,
+      '현장 작업 편의성 향상',
+      '오류·경보 안내, 결과 확인, 반복 입력 최소화 등으로 작업 실수와 정보 누락을 줄이도록 지원합니다.',
+      Icons.verified_outlined,
     ),
     _IconSpec(
-      '생산·설비 관리 효율 향상',
-      '관리자가 생산 현황과 설비 정보를 빠르게 확인하고, 누적된 이력을 관리할 수 있도록 지원합니다.',
+      '관리자 생산관리 효율 향상',
+      '생산 현황과 설비·작업 이력을 체계적으로 확인해 관리자 업무 효율을 높입니다.',
       Icons.fact_check_outlined,
     ),
     _IconSpec(
-      '맞춤형 시스템 개발',
-      '업체별 설비 구성, 통신 방식, 생산 공정, 관리 항목에 맞추어 필요한 기능을 맞춤 개발합니다.',
+      '업체별 공정 맞춤 개발',
+      '설비 구성, 통신 방식, 생산 공정, 관리 항목에 맞춰 필요한 기능을 맞춤형으로 개발합니다.',
       Icons.handyman_outlined,
     ),
     _IconSpec(
-      '상위 시스템 연계 확장',
-      '필요에 따라 MES, ERP, 사내 서버, 데이터베이스 등과 연계할 수 있도록 확장 가능한 구조를 적용합니다.',
+      'MES·ERP 연계 확장',
+      '필요에 따라 MES, ERP, 사내 서버, 데이터베이스 등 상위 시스템과 연계할 수 있는 구조를 적용합니다.',
       Icons.hub_outlined,
     ),
   ];
@@ -797,15 +957,15 @@ class _FeatureSection extends StatelessWidget {
         children: [
           const _SectionHeading(
             eyebrow: '핵심 기능',
-            title: '제조 현장에 바로 도움이 되는 기능',
+            title: '장비 연동부터 작업 화면·이력 관리까지',
             subtitle:
-                '데이터 수집부터 화면 표시, 저장·조회, 작업 편의, 관리 효율, 맞춤 개발, 상위 시스템 연계까지 단계적으로 구성합니다.',
+                '현장 장비와 연결하고, 작업자가 쓰기 쉬운 화면을 구성하며, 저장·조회와 관리자 업무까지 단계적으로 지원합니다.',
           ),
           const SizedBox(height: 46),
           LayoutBuilder(
             builder: (context, constraints) {
               final columns = constraints.maxWidth > 1120
-                  ? 3
+                  ? 4
                   : constraints.maxWidth > 720
                   ? 2
                   : 1;
@@ -831,6 +991,200 @@ class _FeatureSection extends StatelessWidget {
   }
 }
 
+class _DeviceIntegrationSection extends StatelessWidget {
+  const _DeviceIntegrationSection();
+
+  static const fieldDevices = [
+    _IconSpec('PLC', '설비 제어·신호', Icons.memory),
+    _IconSpec('바코드 리더기', '제품·작업 식별', Icons.qr_code_scanner),
+    _IconSpec('QR 코드 리더기', '코드 스캔 연동', Icons.qr_code_2),
+    _IconSpec('조립·체결 Tool', '토크·각도·결과', Icons.build),
+    _IconSpec('검사장비', '측정·판정 데이터', Icons.center_focus_strong),
+    _IconSpec('비전 검사장비', '검사 결과 수집', Icons.visibility),
+    _IconSpec('계측기·센서', '측정·상태 신호', Icons.sensors),
+    _IconSpec('로봇·장비 컨트롤러', '장비 제어 연동', Icons.precision_manufacturing),
+    _IconSpec('프린터·라벨기', '발행·출력 연계', Icons.print_outlined),
+    _IconSpec('중량·온도·압력 장비', '계측값 수집', Icons.thermostat),
+  ];
+
+  static const protocols = [
+    'RS-232',
+    'RS-485',
+    'Serial',
+    'Ethernet',
+    'TCP/IP',
+    'UDP',
+    'Modbus RTU',
+    'Modbus TCP',
+    '소켓 통신',
+    '제조사 전용 프로토콜',
+    'CSV·파일 연계',
+    'DB·API 연계',
+  ];
+
+  static const enterprise = [
+    _IconSpec('MES', '생산관리 연계', Icons.hub_outlined),
+    _IconSpec('ERP', '경영정보 연계', Icons.apartment),
+    _IconSpec('사내 서버', '데이터 전송', Icons.dns_outlined),
+    _IconSpec('데이터베이스', '저장·조회', Icons.storage),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return _SectionShell(
+      child: Column(
+        children: [
+          const _SectionHeading(
+            eyebrow: '장비·시스템 연동',
+            title: '다양한 현장 장비와 연결하고, 상위 시스템으로 확장합니다',
+            subtitle:
+                'PLC뿐 아니라 바코드 리더기, 조립·체결 Tool, 검사장비, 계측기, 센서, 장비 컨트롤러 등 시리얼 또는 이더넷 통신이 가능한 현장 장비와 연동을 검토할 수 있습니다.',
+          ),
+          const SizedBox(height: 20),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: const Text(
+              '장비의 통신 사양과 프로토콜·데이터 포맷이 확인되고, 제조사 통신 문서 또는 테스트 환경이 제공되는 경우 '
+              '현장 환경을 분석한 뒤 연동 방식을 결정합니다. 수집된 데이터는 현장 PC에서 표시·저장·조회하며, '
+              '필요에 따라 MES·ERP·사내 서버·데이터베이스와 연계할 수 있습니다.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.textMutedOnDark,
+                fontSize: 14.5,
+                height: 1.7,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SizedBox(height: 36),
+          _IntegrationGroup(
+            title: '현장 장비 연동 예시',
+            caption: '고객 장비와 공정 환경에 맞춰 적용 가능한 개발 범위입니다.',
+            children: fieldDevices,
+          ),
+          const SizedBox(height: 22),
+          _ProtocolTagPanel(title: '적용 가능한 통신·연계 기술 예시', tags: protocols),
+          const SizedBox(height: 22),
+          _IntegrationGroup(
+            title: '확장 연계 대상 (상위 시스템)',
+            caption: '현장 장비와 구분되는 생산·경영 시스템 연계 영역입니다.',
+            children: enterprise,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IntegrationGroup extends StatelessWidget {
+  const _IntegrationGroup({
+    required this.title,
+    required this.caption,
+    required this.children,
+  });
+
+  final String title;
+  final String caption;
+  final List<_IconSpec> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return _HoverGlowCard(
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: PromoColors.textOnDark,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            caption,
+            style: const TextStyle(
+              color: PromoColors.textMutedOnDark,
+              fontSize: 13,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth > 1000
+                  ? 5
+                  : constraints.maxWidth > 720
+                  ? 3
+                  : constraints.maxWidth > 480
+                  ? 2
+                  : 1;
+              const gap = 12.0;
+              final width =
+                  (constraints.maxWidth - (columns - 1) * gap) / columns;
+              return Wrap(
+                spacing: gap,
+                runSpacing: gap,
+                children: [
+                  for (final item in children)
+                    SizedBox(
+                      width: width,
+                      child: _FeatureTile(feature: item),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProtocolTagPanel extends StatelessWidget {
+  const _ProtocolTagPanel({required this.title, required this.tags});
+
+  final String title;
+  final List<String> tags;
+
+  @override
+  Widget build(BuildContext context) {
+    return _HoverGlowCard(
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: PromoColors.textOnDark,
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            '실제 적용 범위는 장비 통신 사양 확인과 현장 환경 분석 후 결정합니다.',
+            style: TextStyle(
+              color: PromoColors.textMutedOnDark,
+              fontSize: 13,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [for (final tag in tags) _KeywordChip(tag)],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ArchitectureSection extends StatelessWidget {
   const _ArchitectureSection();
 
@@ -838,36 +1192,40 @@ class _ArchitectureSection extends StatelessWidget {
     _ArchitectureLayer(
       label: '현장 장비',
       nodes: [
-        _IconSpec('생산설비', '조립·가공 라인', Icons.precision_manufacturing),
-        _IconSpec('센서', '상태·계측 신호', Icons.sensors),
-        _IconSpec('계측기', '측정 데이터', Icons.speed),
-        _IconSpec('체결기', '토크·각도', Icons.build),
-        _IconSpec('검사장비', '측정·판정', Icons.center_focus_strong),
-      ],
-    ),
-    _ArchitectureLayer(
-      label: '제어·통신',
-      nodes: [
         _IconSpec('PLC', '설비 제어', Icons.memory),
+        _IconSpec('바코드 리더기', '제품·작업 식별', Icons.qr_code_scanner),
+        _IconSpec('조립·체결 Tool', '토크·각도 결과', Icons.build),
+        _IconSpec('검사장비', '측정·판정', Icons.center_focus_strong),
+        _IconSpec('계측기·센서', '측정·상태', Icons.sensors),
+        _IconSpec('생산설비', '라인·공정 설비', Icons.precision_manufacturing),
         _IconSpec('장비 컨트롤러', '장비 제어기', Icons.settings_input_component),
-        _IconSpec('Modbus RTU/TCP', '산업 통신', Icons.lan),
-        _IconSpec('Serial', '시리얼 통신', Icons.cable),
-        _IconSpec('Ethernet', '네트워크', Icons.settings_ethernet),
       ],
     ),
     _ArchitectureLayer(
-      label: '현장 PC 산업자동화 프로그램',
+      label: '통신 연결',
       nodes: [
-        _IconSpec('실시간 데이터 수집', '설비 신호 수집', Icons.download_for_offline),
-        _IconSpec('상태 모니터링', '설비·공정 상태', Icons.monitor_heart_outlined),
-        _IconSpec('생산정보 표시', '수량·결과 표시', Icons.desktop_windows),
-        _IconSpec('데이터 저장', 'CSV·DB 저장', Icons.save_outlined),
-        _IconSpec('이력 조회', '조건별 검색', Icons.history),
-        _IconSpec('경보·오류 표시', '이상 상태 안내', Icons.warning_amber_rounded),
+        _IconSpec('Serial', 'RS-232 / RS-485', Icons.cable),
+        _IconSpec('Ethernet', '네트워크 연결', Icons.settings_ethernet),
+        _IconSpec('TCP/IP', '소켓·네트워크', Icons.lan),
+        _IconSpec('Modbus', 'RTU / TCP', Icons.hub_outlined),
+        _IconSpec('장비 전용 프로토콜', '제조사 사양 기반', Icons.description_outlined),
       ],
     ),
     _ArchitectureLayer(
-      label: '확장 영역 (필요 시 연계 개발)',
+      label: '현장 PC 산업자동화 프로그램 (핵심)',
+      nodes: [
+        _IconSpec('데이터 수집', '장비·설비 신호', Icons.download_for_offline),
+        _IconSpec('작업 화면', '작업자 조작·확인', Icons.touch_app_outlined),
+        _IconSpec('작업 순서 안내', '공정 진행 지원', Icons.list_alt),
+        _IconSpec('설비 상태 표시', '상태·경보 확인', Icons.monitor_heart_outlined),
+        _IconSpec('생산 결과 확인', '수량·OK/NG', Icons.fact_check_outlined),
+        _IconSpec('데이터 저장', '생산정보 축적', Icons.save_outlined),
+        _IconSpec('이력 조회', '조건별 검색', Icons.history),
+        _IconSpec('오류·경보 표시', '이상 안내', Icons.warning_amber_rounded),
+      ],
+    ),
+    _ArchitectureLayer(
+      label: '확장 연계 (필요 시)',
       nodes: [
         _IconSpec('MES', '생산관리 연계', Icons.hub_outlined),
         _IconSpec('ERP', '경영정보 연계', Icons.apartment),
@@ -881,15 +1239,31 @@ class _ArchitectureSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _SectionShell(
+      background: const Color(0xFF07101D),
       child: Column(
         children: [
           const _SectionHeading(
             eyebrow: '시스템 구성도',
-            title: '현장 데이터가 흐르는 단순한 구조',
+            title: '현장 장비를 연결하고, 작업 화면에서 생산을 지원합니다',
             subtitle:
-                '생산설비 → PLC·컨트롤러 → 현장 PC 프로그램 → 표시·저장·조회 → 필요 시 MES·ERP 등으로 확장합니다.',
+                '현장 장비 → 통신 연결 → 현장 PC 프로그램(작업 지원·표시·저장) → 필요 시 MES·ERP 등 확장 연계로 이어집니다.',
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: 18),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 880),
+            child: const Text(
+              '현장 PC는 단순 중계기가 아니라, 장비와 작업자를 연결하고 작업 진행을 지원하며 생산 데이터를 표시·저장하고 '
+              '필요 시 상위 시스템으로 전달하는 핵심 시스템입니다.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.cyan,
+                fontSize: 14.5,
+                height: 1.65,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(height: 40),
           _HoverGlowCard(
             padding: const EdgeInsets.all(24),
             child: LayoutBuilder(
@@ -908,6 +1282,7 @@ class _ArchitectureSection extends StatelessWidget {
                           _ArchitectureLayerView(
                             layer: layers[i],
                             compact: compact,
+                            emphasize: i == 2,
                           ),
                           if (i < layers.length - 1)
                             _ArchitectureArrow(compact: compact),
@@ -2048,7 +2423,7 @@ class _ControlRoomCard extends StatelessWidget {
               SizedBox(width: 10),
               Flexible(
                 child: Text(
-                  '현장 PC 데이터 흐름',
+                  '현장 PC 작업 화면 · 데이터 관리',
                   style: TextStyle(
                     color: PromoColors.textOnDark,
                     fontSize: 18,
@@ -2064,15 +2439,15 @@ class _ControlRoomCard extends StatelessWidget {
           Row(
             children: const [
               Expanded(
-                child: _ControlStat(label: '연동 대상', value: 'PLC'),
+                child: _ControlStat(label: '역할', value: '작업 지원'),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: _ControlStat(label: '수집 위치', value: '현장 PC'),
+                child: _ControlStat(label: '핵심', value: '현장 PC'),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: _ControlStat(label: '확장', value: 'MES'),
+                child: _ControlStat(label: '확장', value: 'MES·ERP'),
               ),
             ],
           ),
@@ -2237,30 +2612,42 @@ class _FeatureTile extends StatelessWidget {
 }
 
 class _ArchitectureLayerView extends StatelessWidget {
-  const _ArchitectureLayerView({required this.layer, required this.compact});
+  const _ArchitectureLayerView({
+    required this.layer,
+    required this.compact,
+    this.emphasize = false,
+  });
 
   final _ArchitectureLayer layer;
   final bool compact;
+  final bool emphasize;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFF071224).withValues(alpha: 0.82),
+        color: emphasize
+            ? PromoColors.electricBlue.withValues(alpha: 0.12)
+            : const Color(0xFF071224).withValues(alpha: 0.82),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        border: Border.all(
+          color: emphasize
+              ? PromoColors.cyan.withValues(alpha: 0.45)
+              : Colors.white.withValues(alpha: 0.08),
+          width: emphasize ? 1.4 : 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             layer.label,
-            style: const TextStyle(
+            style: TextStyle(
               color: PromoColors.cyan,
-              fontSize: 11,
+              fontSize: emphasize ? 12 : 11,
               fontWeight: FontWeight.w900,
-              letterSpacing: 1.4,
+              letterSpacing: emphasize ? 0.8 : 1.4,
             ),
           ),
           const SizedBox(height: 14),

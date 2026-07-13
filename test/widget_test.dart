@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sotong_automation_promo/app.dart';
 
 void main() {
-  testWidgets('App loads hero section', (WidgetTester tester) async {
+  testWidgets('App loads hero and worker-focused intro', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const SotongAutomationApp());
     await tester.pump(const Duration(seconds: 1));
 
@@ -11,6 +13,21 @@ void main() {
     expect(find.text('문의하기'), findsWidgets);
     expect(find.text('데모 요청하기'), findsNothing);
     expect(find.text('소통웨어'), findsWidgets);
+    expect(find.textContaining('작업자'), findsWidgets);
+    expect(find.textContaining('작업자 중심 화면'), findsWidgets);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('Forbidden promo claims are absent', (WidgetTester tester) async {
+    await tester.pumpWidget(const SotongAutomationApp());
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.text('데모 요청하기'), findsNothing);
+    expect(find.textContaining('AI 분석'), findsNothing);
+    expect(find.textContaining('예지보전'), findsNothing);
+    expect(find.textContaining('SCADA'), findsNothing);
+    expect(find.textContaining('Integrated Control Room'), findsNothing);
 
     await tester.pumpWidget(const SizedBox.shrink());
   });

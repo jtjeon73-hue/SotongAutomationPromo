@@ -4,13 +4,13 @@ import '../models/solution_feature.dart';
 
 class SampleAutomationData {
   static const List<String> heroKeywords = [
-    'PLC 연동',
-    '설비 데이터 수집',
-    '실시간 상태 표시',
+    'PLC·장비 연동',
+    '작업자 중심 화면',
+    '작업 순서 안내',
+    '설비 상태 확인',
+    '생산 결과 확인',
     '생산 데이터 저장',
     '이력 조회',
-    '작업자 편의성',
-    '관리 효율 향상',
     '맞춤형 소프트웨어',
     'MES·ERP 연계 확장',
   ];
