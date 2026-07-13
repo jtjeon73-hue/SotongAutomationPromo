@@ -7,17 +7,12 @@ import '../theme/promo_theme.dart';
 
 /// 소통총관제 연동 — 온라인 문의·피드백·지시 흐름 섹션
 class SotongControlHubSection extends StatelessWidget {
-  const SotongControlHubSection({super.key, this.onInquiry, this.onDemo});
+  const SotongControlHubSection({super.key, this.onInquiry});
 
   final VoidCallback? onInquiry;
-  final VoidCallback? onDemo;
 
   Future<void> _defaultInquiry() async {
     await launchUrl(PromoContact.hubInquiryUri());
-  }
-
-  Future<void> _defaultDemo() async {
-    await launchUrl(PromoContact.hubDemoUri());
   }
 
   @override
@@ -58,7 +53,7 @@ class SotongControlHubSection extends StatelessWidget {
                         ],
                       ),
                 const SizedBox(height: 36),
-                _ctaRow(onInquiry ?? _defaultInquiry, onDemo ?? _defaultDemo),
+                _ctaRow(onInquiry ?? _defaultInquiry),
               ],
             ),
           ),
@@ -101,8 +96,8 @@ class SotongControlHubSection extends StatelessWidget {
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
           child: Text(
-            '온라인 고객의 상담·데모·기술 문의는 ${SotongHubConfig.hubName}로 접수되고, '
-            '검토·피드백·후속 지시까지 하나의 흐름으로 관리됩니다. '
+            '온라인 고객의 상담·기술 문의는 ${SotongHubConfig.hubName}로 접수되고, '
+            '검토·피드백·후속 안내까지 하나의 흐름으로 관리됩니다. '
             '본 홍보사이트는 소통총관제와 연계된 고객 접점 채널입니다.',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -334,8 +329,8 @@ class SotongControlHubSection extends StatelessWidget {
   Widget _instructionPanel() {
     const instructions = [
       ('자료 보완 요청', '현장 공정도·연동 대상 설비 목록 전달'),
-      ('데모 일정 확정', '온라인 미팅 7/12 14:00 안내'),
-      ('견적 검토 지시', 'PLC 2대·바코드 1식 기준 1차 제안'),
+      ('상담 일정 안내', '온라인 미팅 일정 조율'),
+      ('견적 검토 안내', 'PLC·바코드 연동 기준 1차 제안'),
     ];
     return Container(
       padding: const EdgeInsets.all(22),
@@ -452,7 +447,7 @@ class SotongControlHubSection extends StatelessWidget {
     );
   }
 
-  Widget _ctaRow(VoidCallback onInquiry, VoidCallback onDemo) {
+  Widget _ctaRow(VoidCallback onInquiry) {
     return Wrap(
       spacing: 14,
       runSpacing: 14,
@@ -460,21 +455,11 @@ class SotongControlHubSection extends StatelessWidget {
       children: [
         FilledButton.icon(
           onPressed: onInquiry,
-          icon: const Icon(Icons.hub_outlined, size: 20),
-          label: const Text('소통총관제 경유 상담 문의'),
+          icon: const Icon(Icons.mail_outline, size: 20),
+          label: const Text('문의하기'),
           style: FilledButton.styleFrom(
             backgroundColor: PromoColors.electricBlue,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          ),
-        ),
-        OutlinedButton.icon(
-          onPressed: onDemo,
-          icon: const Icon(Icons.play_circle_outline, size: 20),
-          label: const Text('데모 요청 (총관제 접수)'),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: PromoColors.cyan,
-            side: const BorderSide(color: PromoColors.cyan),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           ),
         ),

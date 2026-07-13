@@ -38,7 +38,7 @@ class SoftwarePreviewData {
   static const items = [
     SoftwarePreviewSpec(
       title: '통합 대시보드',
-      subtitle: 'KPI · 라인 상태 · 실시간 요약',
+      subtitle: '라인 상태 · 생산 요약',
       icon: Icons.dashboard_customize,
       color: PromoColors.electricBlue,
       type: SoftwarePreviewType.dashboard,
@@ -46,14 +46,14 @@ class SoftwarePreviewData {
     ),
     SoftwarePreviewSpec(
       title: '알람 현황',
-      subtitle: '설비 알람 · 우선순위 · 대응 상태',
+      subtitle: '설비 경보 · 오류 상태',
       icon: Icons.warning_amber_rounded,
       color: PromoColors.alarm,
       type: SoftwarePreviewType.alarm,
       windowTitle: 'ALARM / EVENT MONITOR',
     ),
     SoftwarePreviewSpec(
-      title: '트렌드 분석',
+      title: '트렌드 조회',
       subtitle: 'Torque · Angle · 공정 변수',
       icon: Icons.show_chart,
       color: PromoColors.cyan,
@@ -77,7 +77,7 @@ class SoftwarePreviewData {
       windowTitle: 'PRODUCTION / LINE STATUS',
     ),
     SoftwarePreviewSpec(
-      title: '레시피 관리',
+      title: '설정값 관리',
       subtitle: '공정 파라미터 · 작업 조건',
       icon: Icons.tune,
       color: PromoColors.purple,
@@ -85,12 +85,12 @@ class SoftwarePreviewData {
       windowTitle: 'RECIPE / PROCESS PARAM',
     ),
     SoftwarePreviewSpec(
-      title: 'SPC 품질',
-      subtitle: 'X-bar · UCL/LCL · 이탈 감시',
+      title: '품질 데이터',
+      subtitle: '측정값 · 판정 · 이탈 확인',
       icon: Icons.query_stats,
       color: PromoColors.tealAccent,
       type: SoftwarePreviewType.spc,
-      windowTitle: 'SPC / QUALITY CONTROL',
+      windowTitle: 'QUALITY / MEASUREMENT',
     ),
     SoftwarePreviewSpec(
       title: '이력 조회',

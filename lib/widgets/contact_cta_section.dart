@@ -26,29 +26,13 @@ class ContactCtaSection extends StatelessWidget {
             light: true,
           ),
           const SizedBox(height: 40),
-          Wrap(
-            spacing: 16,
-            runSpacing: 16,
-            alignment: WrapAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: _openEmail,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: PromoColors.teal,
-                  minimumSize: const Size(200, 48),
-                ),
-                child: const Text('상담 문의하기'),
-              ),
-              OutlinedButton(
-                onPressed: _openEmail,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: PromoColors.textOnDark,
-                  side: const BorderSide(color: PromoColors.tealAccent),
-                  minimumSize: const Size(200, 48),
-                ),
-                child: const Text('데모 요청하기'),
-              ),
-            ],
+          ElevatedButton(
+            onPressed: _openEmail,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: PromoColors.teal,
+              minimumSize: const Size(200, 48),
+            ),
+            child: const Text('문의하기'),
           ),
           const SizedBox(height: 24),
           InkWell(

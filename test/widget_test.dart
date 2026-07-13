@@ -8,7 +8,8 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.textContaining('산업자동화'), findsWidgets);
-    expect(find.text('데모 요청하기'), findsWidgets);
+    expect(find.text('문의하기'), findsWidgets);
+    expect(find.text('데모 요청하기'), findsNothing);
     expect(find.text('소통웨어'), findsWidgets);
 
     await tester.pumpWidget(const SizedBox.shrink());
@@ -29,7 +30,8 @@ void main() {
         await tester.pump(const Duration(seconds: 1));
 
         expect(find.textContaining('산업자동화'), findsWidgets);
-        expect(find.text('데모 요청하기'), findsWidgets);
+        expect(find.text('문의하기'), findsWidgets);
+        expect(find.text('데모 요청하기'), findsNothing);
         expect(tester.takeException(), isNull);
 
         await tester.pumpWidget(const SizedBox.shrink());

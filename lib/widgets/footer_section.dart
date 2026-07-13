@@ -46,7 +46,7 @@ class FooterSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Production Line Monitoring / PLC / MES / SCADA / AI',
+                  'PLC 연동 / 설비 데이터 수집 / 모니터링 / 이력 관리 / MES·ERP 연계 확장',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: PromoColors.textMutedOnDark,

@@ -25,6 +25,7 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
   final _previewKey = GlobalKey();
   final _casesKey = GlobalKey();
   final _benefitsKey = GlobalKey();
+  final _expansionKey = GlobalKey();
   final _hubKey = GlobalKey();
   final _contactKey = GlobalKey();
   late final AnimationController _pulseController;
@@ -51,16 +52,8 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
     super.dispose();
   }
 
-  Future<void> _openEmail() async {
-    await launchUrl(PromoContact.mailtoUri());
-  }
-
   Future<void> _openHubInquiry() async {
     await launchUrl(PromoContact.hubInquiryUri());
-  }
-
-  Future<void> _openHubDemo() async {
-    await launchUrl(PromoContact.hubDemoUri());
   }
 
   void _scrollTo(GlobalKey key) {
@@ -100,7 +93,7 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                     _NavButton('핵심기능', () => _scrollTo(_featuresKey)),
                     _NavButton('시스템구성도', () => _scrollTo(_architectureKey)),
                     _NavButton('소프트웨어 화면', () => _scrollTo(_previewKey)),
-                    _NavButton('적용사례', () => _scrollTo(_casesKey)),
+                    _NavButton('개발 가능 분야', () => _scrollTo(_casesKey)),
                     _NavButton('도입효과', () => _scrollTo(_benefitsKey)),
                     _NavButton('소통총관제', () => _scrollTo(_hubKey)),
                     _NavButton('문의하기', _openHubInquiry),
@@ -108,9 +101,9 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                   Padding(
                     padding: const EdgeInsets.only(right: 24, left: 10),
                     child: _ActionButton(
-                      label: viewportWidth > 420 ? '데모 요청하기' : '데모 요청',
-                      icon: Icons.play_circle_outline,
-                      onPressed: _openEmail,
+                      label: '문의하기',
+                      icon: Icons.mail_outline,
+                      onPressed: _openHubInquiry,
                     ),
                   ),
                 ],
@@ -120,8 +113,7 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                   key: _homeKey,
                   child: _HeroSection(
                     animation: _pulseController,
-                    onDemo: _openEmail,
-                    onConsult: _openEmail,
+                    onInquiry: _openHubInquiry,
                     onExplore: () => _scrollTo(_previewKey),
                   ),
                 ),
@@ -150,7 +142,9 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                   child: const _SoftwarePreviewSection(),
                 ),
               ),
-              SliverToBoxAdapter(child: _MidPageCta(onDemo: _openEmail)),
+              SliverToBoxAdapter(
+                child: _MidPageCta(onInquiry: _openHubInquiry),
+              ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
                   key: _casesKey,
@@ -165,20 +159,20 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
               ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
+                  key: _expansionKey,
+                  child: const _FutureExpansionSection(),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: KeyedSubtree(
                   key: _hubKey,
-                  child: SotongControlHubSection(
-                    onInquiry: _openHubInquiry,
-                    onDemo: _openHubDemo,
-                  ),
+                  child: SotongControlHubSection(onInquiry: _openHubInquiry),
                 ),
               ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
                   key: _contactKey,
-                  child: _ContactSection(
-                    onDemo: _openHubDemo,
-                    onConsult: _openHubInquiry,
-                  ),
+                  child: _ContactSection(onInquiry: _openHubInquiry),
                 ),
               ),
               const SliverToBoxAdapter(child: _Footer()),
@@ -253,7 +247,7 @@ class _BrandMark extends StatelessWidget {
                   if (!compact) ...[
                     const SizedBox(height: 1),
                     const Text(
-                      'Factory Monitoring Platform',
+                      '산업자동화 소프트웨어',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
@@ -261,7 +255,7 @@ class _BrandMark extends StatelessWidget {
                         color: PromoColors.cyan,
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        letterSpacing: 1,
+                        letterSpacing: 0.4,
                       ),
                     ),
                   ],
@@ -304,14 +298,12 @@ class _NavButton extends StatelessWidget {
 class _HeroSection extends StatelessWidget {
   const _HeroSection({
     required this.animation,
-    required this.onDemo,
-    required this.onConsult,
+    required this.onInquiry,
     required this.onExplore,
   });
 
   final Animation<double> animation;
-  final VoidCallback onDemo;
-  final VoidCallback onConsult;
+  final VoidCallback onInquiry;
   final VoidCallback onExplore;
 
   @override
@@ -361,8 +353,7 @@ class _HeroSection extends StatelessWidget {
                         Expanded(
                           flex: 11,
                           child: _HeroCopy(
-                            onDemo: onDemo,
-                            onConsult: onConsult,
+                            onInquiry: onInquiry,
                             onExplore: onExplore,
                           ),
                         ),
@@ -376,11 +367,7 @@ class _HeroSection extends StatelessWidget {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _HeroCopy(
-                          onDemo: onDemo,
-                          onConsult: onConsult,
-                          onExplore: onExplore,
-                        ),
+                        _HeroCopy(onInquiry: onInquiry, onExplore: onExplore),
                         const SizedBox(height: 34),
                         const _LiveDashboardShowcase(),
                       ],
@@ -394,14 +381,9 @@ class _HeroSection extends StatelessWidget {
 }
 
 class _HeroCopy extends StatelessWidget {
-  const _HeroCopy({
-    required this.onDemo,
-    required this.onConsult,
-    required this.onExplore,
-  });
+  const _HeroCopy({required this.onInquiry, required this.onExplore});
 
-  final VoidCallback onDemo;
-  final VoidCallback onConsult;
+  final VoidCallback onInquiry;
   final VoidCallback onExplore;
 
   @override
@@ -411,28 +393,41 @@ class _HeroCopy extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const _StatusPill(
-          label: 'ENTERPRISE INDUSTRIAL AUTOMATION PLATFORM',
-          icon: Icons.hexagon_outlined,
+          label: '맞춤형 산업자동화 소프트웨어',
+          icon: Icons.precision_manufacturing_outlined,
         ),
         const SizedBox(height: 30),
         Text(
-          '소통웨어\n산업자동화 모니터링 시스템',
+          '현장 데이터를 연결하여\n제조·생산 업무를 더 편리하게',
           style: TextStyle(
             color: PromoColors.textOnDark,
-            fontSize: isDesktop ? 68 : 44,
-            height: 1.08,
+            fontSize: isDesktop ? 52 : 34,
+            height: 1.15,
             fontWeight: FontWeight.w900,
-            letterSpacing: -2.4,
+            letterSpacing: -1.6,
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 720),
           child: const Text(
-            '실시간 설비 모니터링, 데이터 수집, AI 분석, 예지보전, MES/PLC/SCADA 연동을 하나의 운영 플랫폼으로 통합합니다.',
+            'PLC와 생산설비의 데이터를 현장 PC에서 수집하고, 모니터링·저장·조회할 수 있는 맞춤형 산업자동화 소프트웨어를 개발합니다.',
+            style: TextStyle(
+              color: PromoColors.cyan,
+              fontSize: 18,
+              height: 1.7,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720),
+          child: const Text(
+            '생산설비마다 다른 작업 환경과 관리 방식을 분석하여 작업자에게는 편리한 화면을, 관리자에게는 체계적인 데이터 관리 환경을 제공합니다. 필요에 따라 MES, ERP 등 상위 시스템과 연계할 수 있도록 확장 가능한 구조로 개발합니다.',
             style: TextStyle(
               color: PromoColors.textMutedOnDark,
-              fontSize: 20,
+              fontSize: 16,
               height: 1.72,
               fontWeight: FontWeight.w500,
             ),
@@ -443,14 +438,15 @@ class _HeroCopy extends StatelessWidget {
           spacing: 10,
           runSpacing: 10,
           children: const [
-            _KeywordChip('실시간 설비 모니터링'),
-            _KeywordChip('데이터 수집'),
-            _KeywordChip('AI 분석'),
-            _KeywordChip('예지보전'),
-            _KeywordChip('MES 연동'),
             _KeywordChip('PLC 연동'),
-            _KeywordChip('SCADA'),
-            _KeywordChip('Factory Monitoring Platform'),
+            _KeywordChip('설비 데이터 수집'),
+            _KeywordChip('실시간 상태 표시'),
+            _KeywordChip('생산 데이터 저장'),
+            _KeywordChip('이력 조회'),
+            _KeywordChip('작업자 편의성'),
+            _KeywordChip('관리 효율 향상'),
+            _KeywordChip('맞춤형 소프트웨어'),
+            _KeywordChip('MES·ERP 연계 확장'),
           ],
         ),
         const SizedBox(height: 38),
@@ -459,15 +455,9 @@ class _HeroCopy extends StatelessWidget {
           runSpacing: 14,
           children: [
             _ActionButton(
-              label: '데모 요청하기',
-              icon: Icons.play_arrow_rounded,
-              onPressed: onDemo,
-              large: true,
-            ),
-            _GhostButton(
-              label: '상담 문의하기',
-              icon: Icons.support_agent,
-              onPressed: onConsult,
+              label: '문의하기',
+              icon: Icons.mail_outline,
+              onPressed: onInquiry,
               large: true,
             ),
             _GhostButton(
@@ -483,9 +473,9 @@ class _HeroCopy extends StatelessWidget {
           spacing: 16,
           runSpacing: 16,
           children: const [
-            _HeroMetric(value: '24/7', label: '라인 관제'),
-            _HeroMetric(value: 'OPC UA', label: '표준 통신'),
-            _HeroMetric(value: 'AI', label: '이상 예측'),
+            _HeroMetric(value: 'PLC', label: '설비 연동'),
+            _HeroMetric(value: 'PC', label: '현장 수집·표시'),
+            _HeroMetric(value: 'MES', label: '연계 확장'),
           ],
         ),
       ],
@@ -534,13 +524,13 @@ class _LiveDashboardShowcase extends StatelessWidget {
                     const SizedBox(width: 14),
                     const Expanded(
                       child: Text(
-                        'SOTONG / Plant A / Line 03 Command Center',
+                        '현장 PC / 생산라인 모니터링 화면 예시',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: PromoColors.textOnDark,
                           fontWeight: FontWeight.w800,
                           fontSize: 13,
-                          letterSpacing: 0.4,
+                          letterSpacing: 0.2,
                         ),
                       ),
                     ),
@@ -704,10 +694,10 @@ class _IntroSection extends StatelessWidget {
       child: Column(
         children: [
           const _SectionHeading(
-            eyebrow: 'SYSTEM INTRODUCTION',
-            title: '현장 장비부터 경영 시스템까지 연결되는 산업 데이터 허브',
+            eyebrow: '시스템 소개',
+            title: '현장 설비 데이터를 모아 보기 쉽게 만들고 관리합니다',
             subtitle:
-                'CNC, Robot, Conveyor, PLC, 품질 검사 장비와 상위 MES/ERP를 연결해 생산 현장의 상태, 이력, 알람, 에너지 데이터를 실시간으로 관제합니다.',
+                'PLC와 생산설비에서 발생하는 데이터를 현장 PC에서 수집하고, 화면에 표시하며, 저장·조회할 수 있는 맞춤형 산업자동화 소프트웨어를 개발합니다.',
           ),
           const SizedBox(height: 48),
           LayoutBuilder(
@@ -716,19 +706,18 @@ class _IntroSection extends StatelessWidget {
               final cards = const [
                 _IntroCard(
                   icon: Icons.settings_input_component,
-                  title: 'Field Connectivity',
-                  description:
-                      'PLC, Modbus TCP, OPC UA, MQTT, SQL 기반의 다중 통신 구조',
+                  title: '설비 데이터 수집',
+                  description: 'PLC, 센서, 계측기, 체결기, 검사장비 데이터를 통신으로 수집합니다.',
                 ),
                 _IntroCard(
-                  icon: Icons.analytics_outlined,
-                  title: 'Operations Intelligence',
-                  description: 'OEE, Cycle Time, Alarm, 품질 지표를 한 화면에서 상관 분석',
+                  icon: Icons.desktop_windows_outlined,
+                  title: '현장 모니터링',
+                  description: '설비 상태, 생산 수량, 작업 결과, 경보를 작업자 화면으로 제공합니다.',
                 ),
                 _IntroCard(
-                  icon: Icons.auto_awesome,
-                  title: 'AI Predictive Layer',
-                  description: '온도, 압력, 진동, 전력 데이터를 기반으로 이상 징후를 조기 탐지',
+                  icon: Icons.folder_shared_outlined,
+                  title: '저장·조회·확장',
+                  description: '생산·이력 데이터를 관리하고, 필요 시 MES·ERP와 연계할 수 있습니다.',
                 ),
               ];
 
@@ -771,24 +760,40 @@ class _FeatureSection extends StatelessWidget {
 
   static const features = [
     _IconSpec(
-      '실시간 모니터링',
-      'Live data acquisition',
+      'PLC·설비 데이터 연동',
+      'PLC, 센서, 계측기, 체결기, 검사장비 등에서 발생하는 데이터를 통신을 통해 수집합니다.',
+      Icons.settings_input_component,
+    ),
+    _IconSpec(
+      '현장 모니터링 화면',
+      '설비 상태, 생산 수량, 측정값, 작업 결과, 경보 상태를 작업자가 보기 쉬운 화면으로 제공합니다.',
       Icons.monitor_heart_outlined,
     ),
-    _IconSpec('AI 분석', 'Anomaly & prediction', Icons.auto_graph),
-    _IconSpec('예지보전', 'Predictive maintenance', Icons.build_circle_outlined),
-    _IconSpec('설비관리', 'Asset lifecycle', Icons.precision_manufacturing),
-    _IconSpec('생산관리', 'Production control', Icons.fact_check_outlined),
-    _IconSpec('품질관리', 'SPC & traceability', Icons.verified_outlined),
-    _IconSpec('알람관리', 'Alarm workflow', Icons.notification_important_outlined),
-    _IconSpec('에너지관리', 'Power monitoring', Icons.energy_savings_leaf_outlined),
-    _IconSpec('MES 연동', 'Order & result sync', Icons.hub_outlined),
-    _IconSpec('PLC 통신', 'Machine signal I/O', Icons.memory),
-    _IconSpec('Modbus TCP', 'Industrial protocol', Icons.lan),
-    _IconSpec('OPC UA', 'Standard interface', Icons.account_tree),
-    _IconSpec('MQTT', 'Message broker', Icons.sensors),
-    _IconSpec('SQL', 'Data warehouse', Icons.storage),
-    _IconSpec('Report', 'Auto reporting', Icons.summarize_outlined),
+    _IconSpec(
+      '데이터 저장 및 이력 조회',
+      '수집된 생산정보와 설비 데이터를 저장하고 날짜, 설비, 제품, 작업 조건 등에 따라 조회합니다.',
+      Icons.storage,
+    ),
+    _IconSpec(
+      '작업 편의성 개선',
+      '작업 순서 안내, 설정값 관리, 오류 메시지, 작업 결과 확인 등 현장 작업자가 쉽게 사용할 수 있는 기능을 구성합니다.',
+      Icons.touch_app_outlined,
+    ),
+    _IconSpec(
+      '생산·설비 관리 효율 향상',
+      '관리자가 생산 현황과 설비 정보를 빠르게 확인하고, 누적된 이력을 관리할 수 있도록 지원합니다.',
+      Icons.fact_check_outlined,
+    ),
+    _IconSpec(
+      '맞춤형 시스템 개발',
+      '업체별 설비 구성, 통신 방식, 생산 공정, 관리 항목에 맞추어 필요한 기능을 맞춤 개발합니다.',
+      Icons.handyman_outlined,
+    ),
+    _IconSpec(
+      '상위 시스템 연계 확장',
+      '필요에 따라 MES, ERP, 사내 서버, 데이터베이스 등과 연계할 수 있도록 확장 가능한 구조를 적용합니다.',
+      Icons.hub_outlined,
+    ),
   ];
 
   @override
@@ -798,19 +803,17 @@ class _FeatureSection extends StatelessWidget {
       child: Column(
         children: [
           const _SectionHeading(
-            eyebrow: 'CORE CAPABILITIES',
-            title: '핵심 기능',
+            eyebrow: '핵심 기능',
+            title: '제조 현장에 바로 도움이 되는 기능',
             subtitle:
-                '현장 설비, 생산, 품질, 에너지, 알람, 리포트를 하나의 통합 화면에서 운영할 수 있도록 구성했습니다.',
+                '데이터 수집부터 화면 표시, 저장·조회, 작업 편의, 관리 효율, 맞춤 개발, 상위 시스템 연계까지 단계적으로 구성합니다.',
           ),
           const SizedBox(height: 46),
           LayoutBuilder(
             builder: (context, constraints) {
               final columns = constraints.maxWidth > 1120
-                  ? 5
-                  : constraints.maxWidth > 820
                   ? 3
-                  : constraints.maxWidth > 560
+                  : constraints.maxWidth > 720
                   ? 2
                   : 1;
               final gap = columns == 1 ? 14.0 : 16.0;
@@ -840,42 +843,44 @@ class _ArchitectureSection extends StatelessWidget {
 
   static const layers = [
     _ArchitectureLayer(
-      label: 'FIELD & MACHINE',
+      label: '현장 장비',
       nodes: [
-        _IconSpec('PLC', 'I/O Signal', Icons.memory),
-        _IconSpec('Field Network', 'Ethernet / Serial', Icons.cable),
-        _IconSpec('Robot / CNC', 'Machine Data', Icons.smart_toy_outlined),
+        _IconSpec('생산설비', '조립·가공 라인', Icons.precision_manufacturing),
+        _IconSpec('센서', '상태·계측 신호', Icons.sensors),
+        _IconSpec('계측기', '측정 데이터', Icons.speed),
+        _IconSpec('체결기', '토크·각도', Icons.build),
+        _IconSpec('검사장비', '측정·판정', Icons.center_focus_strong),
       ],
     ),
     _ArchitectureLayer(
-      label: 'DATA PLATFORM',
+      label: '제어·통신',
       nodes: [
-        _IconSpec('Data Collector', 'Protocol Gateway', Icons.sensors),
-        _IconSpec('Application Server', 'Business Logic', Icons.dns_outlined),
-        _IconSpec('Database', 'History / Trend', Icons.storage),
-        _IconSpec(
-          'AI Engine',
-          'Prediction Model',
-          Icons.psychology_alt_outlined,
-        ),
+        _IconSpec('PLC', '설비 제어', Icons.memory),
+        _IconSpec('장비 컨트롤러', '장비 제어기', Icons.settings_input_component),
+        _IconSpec('Modbus RTU/TCP', '산업 통신', Icons.lan),
+        _IconSpec('Serial', '시리얼 통신', Icons.cable),
+        _IconSpec('Ethernet', '네트워크', Icons.settings_ethernet),
       ],
     ),
     _ArchitectureLayer(
-      label: 'OPERATIONS UI',
+      label: '현장 PC 산업자동화 프로그램',
       nodes: [
-        _IconSpec('Web Dashboard', 'Control Room', Icons.dashboard_customize),
-        _IconSpec('Mobile', 'Remote Check', Icons.phone_iphone),
-        _IconSpec('Report', 'PDF / Excel', Icons.summarize_outlined),
-        _IconSpec('Notification', 'Alarm Push', Icons.campaign_outlined),
+        _IconSpec('실시간 데이터 수집', '설비 신호 수집', Icons.download_for_offline),
+        _IconSpec('상태 모니터링', '설비·공정 상태', Icons.monitor_heart_outlined),
+        _IconSpec('생산정보 표시', '수량·결과 표시', Icons.desktop_windows),
+        _IconSpec('데이터 저장', 'CSV·DB 저장', Icons.save_outlined),
+        _IconSpec('이력 조회', '조건별 검색', Icons.history),
+        _IconSpec('경보·오류 표시', '이상 상태 안내', Icons.warning_amber_rounded),
       ],
     ),
     _ArchitectureLayer(
-      label: 'ENTERPRISE & CLOUD',
+      label: '확장 영역 (필요 시 연계 개발)',
       nodes: [
-        _IconSpec('MES', 'Production Order', Icons.hub_outlined),
-        _IconSpec('ERP', 'Business Link', Icons.apartment),
-        _IconSpec('Cloud', 'Scalable Infra', Icons.cloud_queue),
-        _IconSpec('AI Analysis', 'Optimization', Icons.auto_awesome),
+        _IconSpec('MES', '생산관리 연계', Icons.hub_outlined),
+        _IconSpec('ERP', '경영정보 연계', Icons.apartment),
+        _IconSpec('사내 서버', '데이터 전송', Icons.dns_outlined),
+        _IconSpec('데이터베이스', '통합 저장', Icons.storage),
+        _IconSpec('생산관리 시스템', '상위 시스템', Icons.account_tree_outlined),
       ],
     ),
   ];
@@ -886,10 +891,10 @@ class _ArchitectureSection extends StatelessWidget {
       child: Column(
         children: [
           const _SectionHeading(
-            eyebrow: 'PROFESSIONAL ARCHITECTURE DIAGRAM',
-            title: '시스템 구성도',
+            eyebrow: '시스템 구성도',
+            title: '현장 데이터가 흐르는 단순한 구조',
             subtitle:
-                'PLC와 Field Network에서 수집된 현장 데이터가 Collector, Application Server, Database, AI Engine을 거쳐 Web/Mobile/Report/MES/ERP/Cloud로 확장되는 구조입니다.',
+                '생산설비 → PLC·컨트롤러 → 현장 PC 프로그램 → 표시·저장·조회 → 필요 시 MES·ERP 등으로 확장합니다.',
           ),
           const SizedBox(height: 48),
           _HoverGlowCard(
@@ -937,11 +942,10 @@ class _SoftwarePreviewSection extends StatelessWidget {
       child: Column(
         children: [
           const _SectionHeading(
-            eyebrow: 'SOFTWARE SCREEN PREVIEW',
-            title: '소프트웨어 미리보기',
+            eyebrow: '소프트웨어 화면 예시',
+            title: '현장·관리 화면 구성 예시',
             subtitle:
-                '대시보드, 알람, 트렌드, 리포트, 생산, 레시피, SPC, 이력 — '
-                '각 화면 유형에 맞는 전용 레이아웃으로 구성했습니다.',
+                '모니터링, 경보, 트렌드, 생산 현황, 이력 조회 등 현장 PC와 관리 화면에서 구성할 수 있는 화면 예시입니다.',
           ),
           const SizedBox(height: 46),
           LayoutBuilder(
@@ -974,9 +978,9 @@ class _SoftwarePreviewSection extends StatelessWidget {
 }
 
 class _MidPageCta extends StatelessWidget {
-  const _MidPageCta({required this.onDemo});
+  const _MidPageCta({required this.onInquiry});
 
-  final VoidCallback onDemo;
+  final VoidCallback onInquiry;
 
   @override
   Widget build(BuildContext context) {
@@ -998,9 +1002,9 @@ class _MidPageCta extends StatelessWidget {
                   const Expanded(child: _MidPageCtaCopy()),
                   const SizedBox(width: 28),
                   _ActionButton(
-                    label: '데모 요청',
-                    icon: Icons.play_arrow_rounded,
-                    onPressed: onDemo,
+                    label: '문의하기',
+                    icon: Icons.mail_outline,
+                    onPressed: onInquiry,
                     large: true,
                   ),
                 ],
@@ -1013,9 +1017,9 @@ class _MidPageCta extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: _ActionButton(
-                      label: '데모 요청',
-                      icon: Icons.play_arrow_rounded,
-                      onPressed: onDemo,
+                      label: '문의하기',
+                      icon: Icons.mail_outline,
+                      onPressed: onInquiry,
                       large: true,
                     ),
                   ),
@@ -1036,10 +1040,10 @@ class _MidPageCtaCopy extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _StatusPill(label: 'CONSULTING CTA', icon: Icons.support_agent),
+        const _StatusPill(label: '개발 상담', icon: Icons.support_agent),
         const SizedBox(height: 16),
         Text(
-          '지금 바로 상담을 받아보세요.',
+          '현장 환경에 맞는 맞춤 개발을 상담해 보세요.',
           style: TextStyle(
             color: PromoColors.textOnDark,
             fontSize: isWide ? 32 : 26,
@@ -1050,7 +1054,7 @@ class _MidPageCtaCopy extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         const Text(
-          '현장 설비와 생산 데이터 흐름을 확인한 뒤 데모 화면과 구축 방향을 제안드립니다.',
+          '설비 구성과 업무 방식을 확인한 뒤, 수집·표시·저장·조회에 필요한 프로그램 방향을 제안드립니다.',
           style: TextStyle(
             color: PromoColors.textMutedOnDark,
             fontSize: 15,
@@ -1067,16 +1071,16 @@ class _IndustryCaseSection extends StatelessWidget {
   const _IndustryCaseSection();
 
   static const industries = [
-    _IconSpec('자동차', 'Assembly / EOL', Icons.directions_car),
-    _IconSpec('반도체', 'Equipment FAB', Icons.memory),
-    _IconSpec('배터리', 'Cell / Module', Icons.battery_charging_full),
-    _IconSpec('식품', 'HACCP Line', Icons.restaurant),
-    _IconSpec('제약', 'GMP Process', Icons.medication_outlined),
-    _IconSpec('철강', 'Mill Operation', Icons.factory),
-    _IconSpec('화학', 'Process Plant', Icons.science_outlined),
-    _IconSpec('물류', 'Conveyor / Sorter', Icons.local_shipping_outlined),
-    _IconSpec('에너지', 'Power Facility', Icons.bolt),
-    _IconSpec('전자', 'SMT / Test', Icons.devices_other),
+    _IconSpec('PLC 생산 데이터 모니터링', '설비 신호·수량 표시', Icons.memory),
+    _IconSpec('체결 토크·각도 결과 관리', '체결 결과·OK/NG', Icons.build),
+    _IconSpec('검사장비 측정 데이터 수집', '측정값·판정 저장', Icons.center_focus_strong),
+    _IconSpec('생산 수량·작업 실적 관리', '실적 기록·조회', Icons.inventory_2_outlined),
+    _IconSpec('설비 상태·오류 이력 관리', '경보·오류 추적', Icons.warning_amber_rounded),
+    _IconSpec('CSV·데이터베이스 저장', '파일·DB 저장', Icons.description_outlined),
+    _IconSpec('생산 결과 조회 프로그램', '조건별 이력 검색', Icons.history),
+    _IconSpec('현장 작업 안내 프로그램', '순서·설정 안내', Icons.list_alt),
+    _IconSpec('제조 데이터 서버 전송', '사내 서버 연계', Icons.dns_outlined),
+    _IconSpec('MES·ERP 연계 인터페이스', '상위 시스템 확장', Icons.hub_outlined),
   ];
 
   @override
@@ -1085,10 +1089,9 @@ class _IndustryCaseSection extends StatelessWidget {
       child: Column(
         children: [
           const _SectionHeading(
-            eyebrow: 'INDUSTRY APPLICATIONS',
-            title: '적용사례',
-            subtitle:
-                '자동차, 반도체, 배터리, 식품, 제약, 철강, 화학, 물류, 에너지, 전자 산업의 생산/검사/설비 데이터를 통합합니다.',
+            eyebrow: '개발 가능 분야',
+            title: '적용 가능한 개발 예시',
+            subtitle: '실제 납품 실적을 단정하지 않고, 현장 요구에 따라 개발할 수 있는 대표적인 분야를 안내합니다.',
           ),
           const SizedBox(height: 46),
           LayoutBuilder(
@@ -1127,27 +1130,43 @@ class _IndustryCaseSection extends StatelessWidget {
 class _BenefitsSection extends StatelessWidget {
   const _BenefitsSection();
 
-  static const benefits = [
-    _BenefitSpec('설비가동률', '20~30%', Icons.trending_up, PromoColors.success),
-    _BenefitSpec(
-      '생산성',
-      '15~25%',
-      Icons.rocket_launch_outlined,
-      PromoColors.cyan,
+  static const groups = [
+    _BenefitGroup(
+      title: '작업자 측면',
+      icon: Icons.engineering,
+      color: PromoColors.cyan,
+      items: [
+        '여러 장비의 상태를 한 화면에서 쉽게 확인',
+        '작업 결과와 오류 내용을 빠르게 확인',
+        '반복적인 기록과 확인 업무 감소',
+        '현장에 맞춘 직관적인 화면 사용',
+        '작업 실수와 정보 누락 감소',
+      ],
     ),
-    _BenefitSpec(
-      '불량감소',
-      '10~20%',
-      Icons.verified_outlined,
-      PromoColors.electricBlue,
+    _BenefitGroup(
+      title: '관리자 측면',
+      icon: Icons.manage_accounts_outlined,
+      color: PromoColors.electricBlue,
+      items: [
+        '생산 현황과 설비 상태 확인',
+        '작업 결과와 생산 이력 관리',
+        '데이터 검색과 보고 자료 확인 편의성 향상',
+        '문제 발생 시 관련 이력 추적',
+        '현장 데이터의 체계적인 관리',
+      ],
     ),
-    _BenefitSpec(
-      '유지보수비',
-      '20~40%',
-      Icons.savings_outlined,
-      PromoColors.warning,
+    _BenefitGroup(
+      title: '기업 측면',
+      icon: Icons.apartment,
+      color: PromoColors.success,
+      items: [
+        '수작업 중심의 관리 방식 개선',
+        '생산정보의 디지털화',
+        '제조·생산 관리 효율 향상',
+        '향후 MES·ERP 연계 기반 마련',
+        '업체 상황에 맞춘 단계적 시스템 확장',
+      ],
     ),
-    _BenefitSpec('다운타임', '30%', Icons.timer_off_outlined, PromoColors.alarm),
   ];
 
   @override
@@ -1157,19 +1176,16 @@ class _BenefitsSection extends StatelessWidget {
       child: Column(
         children: [
           const _SectionHeading(
-            eyebrow: 'BUSINESS IMPACT',
-            title: '도입 효과',
-            subtitle:
-                '현장 데이터의 실시간 가시화와 분석 자동화를 통해 설비 운영 효율, 생산성, 품질, 유지보수 비용을 동시에 개선합니다.',
+            eyebrow: '도입 효과',
+            title: '제조업체가 체감할 수 있는 변화',
+            subtitle: '과장된 수치 없이, 작업 편의성과 관리 효율을 높이는 실질적인 개선 방향을 중심으로 안내합니다.',
           ),
           const SizedBox(height: 46),
           LayoutBuilder(
             builder: (context, constraints) {
-              final columns = constraints.maxWidth > 1060
-                  ? 5
-                  : constraints.maxWidth > 760
+              final columns = constraints.maxWidth > 980
                   ? 3
-                  : constraints.maxWidth > 520
+                  : constraints.maxWidth > 640
                   ? 2
                   : 1;
               const gap = 16.0;
@@ -1179,10 +1195,10 @@ class _BenefitsSection extends StatelessWidget {
                 spacing: gap,
                 runSpacing: gap,
                 children: [
-                  for (final benefit in benefits)
+                  for (final group in groups)
                     SizedBox(
                       width: width,
-                      child: _BenefitCard(benefit: benefit),
+                      child: _BenefitGroupCard(group: group),
                     ),
                 ],
               );
@@ -1194,11 +1210,45 @@ class _BenefitsSection extends StatelessWidget {
   }
 }
 
-class _ContactSection extends StatelessWidget {
-  const _ContactSection({required this.onDemo, required this.onConsult});
+class _FutureExpansionSection extends StatelessWidget {
+  const _FutureExpansionSection();
 
-  final VoidCallback onDemo;
-  final VoidCallback onConsult;
+  @override
+  Widget build(BuildContext context) {
+    return _SectionShell(
+      child: _HoverGlowCard(
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 34),
+        borderColor: PromoColors.cyan.withValues(alpha: 0.35),
+        child: Column(
+          children: [
+            const _SectionHeading(
+              eyebrow: '향후 확장',
+              title: '현장 데이터 축적 후 확장 가능한 기능',
+              subtitle:
+                  '설비와 생산 데이터가 충분히 축적되면 고객의 필요에 따라 통계 분석, 품질 경향 분석, 이상 패턴 확인, 보고서 자동화 등 데이터 활용 기능을 단계적으로 검토할 수 있습니다.',
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '현재 기본 제공 기능이 아니며, 데이터 축적과 현장 요구에 따라 검토·확장 가능합니다.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: PromoColors.textMutedOnDark.withValues(alpha: 0.9),
+                fontSize: 14,
+                height: 1.6,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ContactSection extends StatelessWidget {
+  const _ContactSection({required this.onInquiry});
+
+  final VoidCallback onInquiry;
 
   @override
   Widget build(BuildContext context) {
@@ -1218,24 +1268,24 @@ class _ContactSection extends StatelessWidget {
             Column(
               children: [
                 const _StatusPill(
-                  label: 'SOTONG HUB · REQUEST A DEMO',
-                  icon: Icons.hub_outlined,
+                  label: '프로젝트 상담 · 문의하기',
+                  icon: Icons.mail_outline,
                 ),
                 const SizedBox(height: 22),
                 Text(
-                  '공장 자동화 및 모니터링 시스템 구축이 필요하신가요?',
+                  '현장 맞춤형 산업자동화 소프트웨어가 필요하신가요?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: PromoColors.textOnDark,
-                    fontSize: isWide ? 42 : 30,
-                    height: 1.22,
+                    fontSize: isWide ? 38 : 28,
+                    height: 1.25,
                     fontWeight: FontWeight.w900,
-                    letterSpacing: -1.4,
+                    letterSpacing: -1.2,
                   ),
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  '문의는 소통총관제로 접수되어 검토·피드백·후속 지시까지 연계됩니다.',
+                  '문의는 소통총관제로 접수되어 검토·피드백·후속 안내까지 연계됩니다.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: PromoColors.cyan,
@@ -1246,17 +1296,7 @@ class _ContactSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  '귀사의 생산 환경에 맞는 맞춤형 시스템을 제안드립니다.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: PromoColors.textMutedOnDark,
-                    fontSize: 17,
-                    height: 1.7,
-                  ),
-                ),
-                const SizedBox(height: 18),
-                const Text(
-                  'PLC 연동, 설비 데이터 수집, 생산 모니터링, MES/SCADA, AI 예지보전까지 상담 메일 한 통으로 시작하세요.',
+                  'PLC 연동, 설비 데이터 수집, 모니터링 화면, 이력 관리, MES·ERP 연계 확장까지 상담 메일 한 통으로 시작하세요.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: PromoColors.textMutedOnDark,
@@ -1265,36 +1305,12 @@ class _ContactSection extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: 24),
-                const Text(
-                  '지금 바로 상담을 받아보세요.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: PromoColors.cyan,
-                    fontSize: 18,
-                    height: 1.45,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
                 const SizedBox(height: 34),
-                Wrap(
-                  spacing: 14,
-                  runSpacing: 14,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    _ActionButton(
-                      label: '소통총관제 상담 문의',
-                      icon: Icons.support_agent,
-                      onPressed: onConsult,
-                      large: true,
-                    ),
-                    _GhostButton(
-                      label: '데모 요청 (총관제 접수)',
-                      icon: Icons.play_arrow_rounded,
-                      onPressed: onDemo,
-                      large: true,
-                    ),
-                  ],
+                _ActionButton(
+                  label: '문의하기',
+                  icon: Icons.mail_outline,
+                  onPressed: onInquiry,
+                  large: true,
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -1378,14 +1394,14 @@ class _Footer extends StatelessWidget {
             ),
             SizedBox(height: 18),
             Text(
-              'SOTONGWARE INDUSTRIAL AUTOMATION MONITORING SYSTEM  |  PLC  MES  SCADA  AI  CLOUD',
+              'PLC · 설비 데이터 수집 · 모니터링 · 이력 관리 · MES·ERP 연계 확장',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: PromoColors.textMutedOnDark,
                 fontSize: 11,
                 height: 1.6,
                 fontWeight: FontWeight.w700,
-                letterSpacing: 1.1,
+                letterSpacing: 0.4,
               ),
             ),
           ],
@@ -2039,14 +2055,16 @@ class _ControlRoomCard extends StatelessWidget {
         children: [
           Row(
             children: const [
-              Icon(Icons.grid_view_rounded, color: PromoColors.cyan, size: 22),
+              Icon(Icons.computer, color: PromoColors.cyan, size: 22),
               SizedBox(width: 10),
-              Text(
-                'Integrated Control Room',
-                style: TextStyle(
-                  color: PromoColors.textOnDark,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
+              Flexible(
+                child: Text(
+                  '현장 PC 데이터 흐름',
+                  style: TextStyle(
+                    color: PromoColors.textOnDark,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
             ],
@@ -2057,15 +2075,15 @@ class _ControlRoomCard extends StatelessWidget {
           Row(
             children: const [
               Expanded(
-                child: _ControlStat(label: 'Connected Machines', value: '128'),
+                child: _ControlStat(label: '연동 대상', value: 'PLC'),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: _ControlStat(label: 'Data Points / sec', value: '42K'),
+                child: _ControlStat(label: '수집 위치', value: '현장 PC'),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: _ControlStat(label: 'AI Alerts', value: '7'),
+                child: _ControlStat(label: '확장', value: 'MES'),
               ),
             ],
           ),
@@ -2185,7 +2203,7 @@ class _FeatureTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _HoverGlowCard(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(22),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -2210,16 +2228,17 @@ class _FeatureTile extends StatelessWidget {
               color: PromoColors.textOnDark,
               fontSize: 17,
               fontWeight: FontWeight.w900,
+              height: 1.3,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 10),
           Text(
             feature.subtitle,
             style: const TextStyle(
               color: PromoColors.textMutedOnDark,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.2,
+              fontSize: 13,
+              height: 1.55,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -2307,22 +2326,24 @@ class _ArchitectureNodeCard extends StatelessWidget {
               children: [
                 Text(
                   node.title,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: PromoColors.textOnDark,
                     fontSize: 13,
+                    height: 1.25,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   node.subtitle,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: PromoColors.textMutedOnDark,
                     fontSize: 11,
+                    height: 1.3,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -2467,19 +2488,25 @@ class _IndustryCard extends StatelessWidget {
               children: [
                 Text(
                   item.title,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: PromoColors.textOnDark,
-                    fontSize: 16,
+                    fontSize: 14,
+                    height: 1.3,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   item.subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: PromoColors.textMutedOnDark,
                     fontSize: 12,
-                    fontWeight: FontWeight.w700,
+                    height: 1.35,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -2505,17 +2532,17 @@ class _CaseStrip extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Representative Deployment Scenario',
+                '개발 적용 예시',
                 style: TextStyle(
                   color: PromoColors.cyan,
                   fontSize: 12,
                   fontWeight: FontWeight.w900,
-                  letterSpacing: 1.1,
+                  letterSpacing: 0.6,
                 ),
               ),
               SizedBox(height: 10),
               Text(
-                '자동차 부품 조립라인 통합 관제',
+                '자동차 부품 조립라인 모니터링',
                 style: TextStyle(
                   color: PromoColors.textOnDark,
                   fontSize: 26,
@@ -2525,7 +2552,7 @@ class _CaseStrip extends StatelessWidget {
               ),
               SizedBox(height: 12),
               Text(
-                '체결툴, 바코드, PLC, MES, 품질 검사 데이터를 연결해 작업순서, OK/NG, Cycle Time, Alarm 이력을 통합합니다.',
+                '체결툴, 바코드, PLC, 검사장비 데이터를 현장 PC에서 수집해 작업 순서, OK/NG, 생산 이력, 경보 상태를 표시·저장·조회하도록 구성할 수 있습니다.',
                 style: TextStyle(
                   color: PromoColors.textMutedOnDark,
                   fontSize: 15,
@@ -2560,61 +2587,54 @@ class _CaseStrip extends StatelessWidget {
   }
 }
 
-class _BenefitCard extends StatelessWidget {
-  const _BenefitCard({required this.benefit});
+class _BenefitGroupCard extends StatelessWidget {
+  const _BenefitGroupCard({required this.group});
 
-  final _BenefitSpec benefit;
+  final _BenefitGroup group;
 
   @override
   Widget build(BuildContext context) {
-    final number =
-        double.tryParse(benefit.value.replaceAll(RegExp('[^0-9]'), '')) ?? 0;
     return _HoverGlowCard(
       padding: const EdgeInsets.all(22),
-      borderColor: benefit.color.withValues(alpha: 0.28),
+      borderColor: group.color.withValues(alpha: 0.28),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(benefit.icon, color: benefit.color, size: 30),
-          const SizedBox(height: 22),
+          Icon(group.icon, color: group.color, size: 28),
+          const SizedBox(height: 16),
           Text(
-            benefit.title,
+            group.title,
             style: const TextStyle(
               color: PromoColors.textOnDark,
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(height: 12),
-          TweenAnimationBuilder<double>(
-            duration: const Duration(milliseconds: 1200),
-            curve: Curves.easeOutCubic,
-            tween: Tween(begin: 0, end: number),
-            builder: (context, value, _) {
-              final label = benefit.value.contains('~')
-                  ? benefit.value
-                  : '${value.round()}%';
-              return Text(
-                label,
-                style: TextStyle(
-                  color: benefit.color,
-                  fontSize: 34,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -1.0,
+          const SizedBox(height: 16),
+          for (final item in group.items) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Icon(Icons.circle, size: 7, color: group.color),
                 ),
-              );
-            },
-          ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(99),
-            child: LinearProgressIndicator(
-              value: math.min(number / 40, 1),
-              minHeight: 7,
-              backgroundColor: Colors.white.withValues(alpha: 0.08),
-              valueColor: AlwaysStoppedAnimation<Color>(benefit.color),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      color: PromoColors.textMutedOnDark,
+                      fontSize: 14,
+                      height: 1.55,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
+            if (item != group.items.last) const SizedBox(height: 10),
+          ],
         ],
       ),
     );
@@ -2659,12 +2679,12 @@ class _LoadingOverlay extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             const Text(
-              'INITIALIZING FACTORY MONITORING PLATFORM',
+              '산업자동화 소프트웨어 준비 중',
               style: TextStyle(
                 color: PromoColors.cyan,
                 fontSize: 12,
                 fontWeight: FontWeight.w900,
-                letterSpacing: 1.4,
+                letterSpacing: 0.8,
               ),
             ),
           ],
@@ -2689,13 +2709,18 @@ class _ArchitectureLayer {
   final List<_IconSpec> nodes;
 }
 
-class _BenefitSpec {
-  const _BenefitSpec(this.title, this.value, this.icon, this.color);
+class _BenefitGroup {
+  const _BenefitGroup({
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.items,
+  });
 
   final String title;
-  final String value;
   final IconData icon;
   final Color color;
+  final List<String> items;
 }
 
 class _SmartFactoryBackgroundPainter extends CustomPainter {

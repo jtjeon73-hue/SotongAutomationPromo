@@ -17,8 +17,8 @@ class SystemArchitectureSection extends StatelessWidget {
           const SectionTitle(
             title: '시스템 구성 개념',
             subtitle:
-                '작업자 / 설비 / 바코드 / Tool → 공정 PC 모니터링 프로그램 → '
-                'CSV / 로컬 데이터 / 그래프 → MES / 관리자 모니터링 → 생산 이력 / 품질 추적',
+                '생산설비·센서·검사장비 → PLC·컨트롤러 → 현장 PC 산업자동화 프로그램 → '
+                '표시·저장·조회 → 필요 시 MES·ERP·사내 서버로 확장',
           ),
           const SizedBox(height: 56),
           _ArchitectureDiagram(nodes: nodes),
@@ -53,9 +53,13 @@ class _ArchitectureDiagram extends StatelessWidget {
             highlight: true,
           ),
           _Connector(),
-          _LayerRow(label: '데이터 / 분석', nodeIndices: [5, 6], nodes: nodes),
+          _LayerRow(label: '데이터 / 조회', nodeIndices: [5, 6], nodes: nodes),
           _Connector(),
-          _LayerRow(label: '상위 시스템 / 관제', nodeIndices: [7, 8], nodes: nodes),
+          _LayerRow(
+            label: '확장 영역 (필요 시 연계)',
+            nodeIndices: [7, 8],
+            nodes: nodes,
+          ),
           const SizedBox(height: 32),
           _FlowSummary(),
         ],
@@ -220,31 +224,31 @@ class _FlowSummary extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          _flowChip('작업자 / 설비 / 바코드 / Tool'),
+          _flowChip('생산설비 · PLC'),
           const Icon(
             Icons.arrow_forward,
             color: PromoColors.tealAccent,
             size: 16,
           ),
-          _flowChip('공정 PC 모니터링'),
+          _flowChip('현장 PC 프로그램'),
           const Icon(
             Icons.arrow_forward,
             color: PromoColors.tealAccent,
             size: 16,
           ),
-          _flowChip('CSV / 그래프'),
+          _flowChip('표시 · 저장 · 조회'),
           const Icon(
             Icons.arrow_forward,
             color: PromoColors.tealAccent,
             size: 16,
           ),
-          _flowChip('MES / 관리자'),
+          _flowChip('MES · ERP 확장'),
           const Icon(
             Icons.arrow_forward,
             color: PromoColors.tealAccent,
             size: 16,
           ),
-          _flowChip('생산 이력 / 품질 추적'),
+          _flowChip('생산 이력 관리'),
         ],
       ),
     );

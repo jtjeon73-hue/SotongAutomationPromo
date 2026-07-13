@@ -2,7 +2,7 @@ class PromoContact {
   PromoContact._();
 
   static const String email = 'sotongware@naver.com';
-  static const String subject = '[소통웨어 산업자동화 모니터링 시스템 상담문의]';
+  static const String subject = '[소통웨어 산업자동화 소프트웨어 문의]';
   static const String body = '''업체명 :
 
 담당자 :
@@ -17,21 +17,17 @@ class PromoContact {
 
 문의 분야 :
 
-□ PLC 연동
+□ PLC·설비 데이터 연동
 
-□ 산업자동화 모니터링
+□ 현장 모니터링 화면
 
-□ 설비 데이터 수집
+□ 생산·이력 데이터 관리
 
-□ 생산 모니터링
+□ 작업 편의성 개선
 
-□ MES 연동
+□ MES·ERP 연계 확장
 
-□ SCADA
-
-□ AI 예지보전
-
-□ 스마트팩토리 구축
+□ 맞춤형 프로그램 개발
 
 □ 기타
 
@@ -68,31 +64,6 @@ class PromoContact {
 
 ---
 ※ 본 메일은 소통총관제 접수 흐름으로 처리됩니다.''',
-      },
-    );
-  }
-
-  static Uri hubDemoUri() {
-    return Uri(
-      scheme: 'mailto',
-      path: email,
-      queryParameters: {
-        'subject': '$hubSubjectPrefix 데모 요청',
-        'body': '''[소통총관제 연동 — 데모 요청]
-접수 채널: 홍보사이트
-
-업체명 :
-
-담당자 :
-
-연락처 :
-
-희망 데모 내용 (PLC/바코드/MES/모니터링 등) :
-
-희망 일정 :
-
----
-※ 소통총관제에서 일정·자료를 안내드립니다.''',
       },
     );
   }
