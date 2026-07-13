@@ -8,6 +8,7 @@ import '../theme/promo_theme.dart';
 import 'software_preview_layouts.dart';
 import 'sotong_brand_logo.dart';
 import 'sotong_control_hub_section.dart';
+import 'mobile_navigation.dart';
 
 class IndustrialLandingPage extends StatefulWidget {
   const IndustrialLandingPage({super.key});
@@ -18,10 +19,14 @@ class IndustrialLandingPage extends StatefulWidget {
 
 class _IndustrialLandingPageState extends State<IndustrialLandingPage>
     with SingleTickerProviderStateMixin {
+  static const _mobileBreakpoint = 768.0;
+
   final _scrollController = ScrollController();
   final _homeKey = GlobalKey();
   final _introKey = GlobalKey();
   final _featuresKey = GlobalKey();
+  final _workerKey = GlobalKey();
+  final _integrationKey = GlobalKey();
   final _architectureKey = GlobalKey();
   final _previewKey = GlobalKey();
   final _casesKey = GlobalKey();
@@ -31,6 +36,10 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
   final _contactKey = GlobalKey();
   late final AnimationController _pulseController;
   bool _loading = true;
+  bool _showScrollTop = false;
+  bool _programmaticScroll = false;
+  MobileNavTab _activeTab = MobileNavTab.intro;
+  String? _activeMenuLabel;
 
   @override
   void initState() {
@@ -39,6 +48,7 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
       vsync: this,
       duration: const Duration(seconds: 4),
     )..repeat();
+    _scrollController.addListener(_onScroll);
     Future<void>.delayed(const Duration(milliseconds: 850), () {
       if (mounted) {
         setState(() => _loading = false);
@@ -48,6 +58,7 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _pulseController.dispose();
     super.dispose();
@@ -57,20 +68,187 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
     await launchUrl(PromoContact.hubInquiryUri());
   }
 
-  void _scrollTo(GlobalKey key) {
-    final context = key.currentContext;
-    if (context == null) return;
-    Scrollable.ensureVisible(
-      context,
+  Future<void> _scrollTo(
+    GlobalKey key, {
+    MobileNavTab? tab,
+    String? menuLabel,
+  }) async {
+    final targetContext = key.currentContext;
+    if (targetContext == null) return;
+
+    _programmaticScroll = true;
+    if (tab != null || menuLabel != null) {
+      setState(() {
+        if (tab != null) _activeTab = tab;
+        if (menuLabel != null) _activeMenuLabel = menuLabel;
+      });
+    }
+
+    await Scrollable.ensureVisible(
+      targetContext,
       duration: const Duration(milliseconds: 750),
       curve: Curves.easeInOutCubic,
       alignment: 0.02,
+    );
+
+    if (!mounted) return;
+    _programmaticScroll = false;
+    _updateActiveFromScroll();
+  }
+
+  void _scrollToTop() {
+    _programmaticScroll = true;
+    setState(() {
+      _activeTab = MobileNavTab.intro;
+      _activeMenuLabel = '시스템 소개';
+      _showScrollTop = false;
+    });
+    _scrollController
+        .animateTo(
+          0,
+          duration: const Duration(milliseconds: 650),
+          curve: Curves.easeInOutCubic,
+        )
+        .whenComplete(() {
+          _programmaticScroll = false;
+        });
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final showTop = _scrollController.offset > 480;
+    if (showTop != _showScrollTop) {
+      setState(() => _showScrollTop = showTop);
+    }
+    if (!_programmaticScroll) {
+      _updateActiveFromScroll();
+    }
+  }
+
+  void _updateActiveFromScroll() {
+    final entries = <(GlobalKey, MobileNavTab, String)>[
+      (_homeKey, MobileNavTab.intro, '시스템 소개'),
+      (_introKey, MobileNavTab.intro, '시스템 소개'),
+      (_featuresKey, MobileNavTab.features, '핵심 기능'),
+      (_workerKey, MobileNavTab.features, '작업자 중심 화면'),
+      (_integrationKey, MobileNavTab.integration, '연동 대상'),
+      (_architectureKey, MobileNavTab.integration, '시스템 구성도'),
+      (_previewKey, MobileNavTab.features, '핵심 기능'),
+      (_casesKey, MobileNavTab.features, '적용 분야'),
+      (_benefitsKey, MobileNavTab.features, '도입 효과'),
+      (_expansionKey, MobileNavTab.features, '도입 효과'),
+      (_hubKey, MobileNavTab.contact, '문의하기'),
+      (_contactKey, MobileNavTab.contact, '문의하기'),
+    ];
+
+    MobileNavTab? bestTab;
+    String? bestLabel;
+    var bestScore = double.negativeInfinity;
+
+    for (final entry in entries) {
+      final ctx = entry.$1.currentContext;
+      if (ctx == null) continue;
+      final box = ctx.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) continue;
+      final offset = box.localToGlobal(Offset.zero);
+      final top = offset.dy;
+      final bottom = top + box.size.height;
+      final score = -(top - 120).abs() + (bottom > 140 ? 40 : 0);
+      if (score > bestScore) {
+        bestScore = score;
+        bestTab = entry.$2;
+        bestLabel = entry.$3;
+      }
+    }
+
+    if (bestTab == null || bestLabel == null) return;
+    if (bestTab != _activeTab || bestLabel != _activeMenuLabel) {
+      setState(() {
+        _activeTab = bestTab!;
+        _activeMenuLabel = bestLabel;
+      });
+    }
+  }
+
+  void _onBottomNavSelect(MobileNavTab tab) {
+    switch (tab) {
+      case MobileNavTab.intro:
+        _scrollTo(_introKey, tab: tab, menuLabel: '시스템 소개');
+      case MobileNavTab.features:
+        _scrollTo(_featuresKey, tab: tab, menuLabel: '핵심 기능');
+      case MobileNavTab.integration:
+        _scrollTo(_integrationKey, tab: tab, menuLabel: '연동 대상');
+      case MobileNavTab.contact:
+        _scrollTo(_contactKey, tab: tab, menuLabel: '문의하기');
+    }
+  }
+
+  void _onFullMenuSelect(String label) {
+    switch (label) {
+      case '시스템 소개':
+        _scrollTo(_introKey, tab: MobileNavTab.intro, menuLabel: label);
+      case '핵심 기능':
+        _scrollTo(_featuresKey, tab: MobileNavTab.features, menuLabel: label);
+      case '작업자 중심 화면':
+        _scrollTo(_workerKey, tab: MobileNavTab.features, menuLabel: label);
+      case '연동 대상':
+        _scrollTo(
+          _integrationKey,
+          tab: MobileNavTab.integration,
+          menuLabel: label,
+        );
+      case '통신 방식':
+        _scrollTo(
+          _integrationKey,
+          tab: MobileNavTab.integration,
+          menuLabel: label,
+        );
+      case '시스템 구성도':
+        _scrollTo(
+          _architectureKey,
+          tab: MobileNavTab.integration,
+          menuLabel: label,
+        );
+      case '도입 효과':
+        _scrollTo(_benefitsKey, tab: MobileNavTab.features, menuLabel: label);
+      case '적용 분야':
+        _scrollTo(_casesKey, tab: MobileNavTab.features, menuLabel: label);
+      case '문의하기':
+        _scrollTo(_contactKey, tab: MobileNavTab.contact, menuLabel: label);
+    }
+  }
+
+  Future<void> _openFullMenu() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF0F1B2E),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.82,
+          child: MobileFullMenuSheet(
+            activeLabel: _activeMenuLabel,
+            onSelect: (label) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) _onFullMenuSelect(label);
+              });
+            },
+          ),
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final viewportWidth = MediaQuery.sizeOf(context).width;
+    final isMobile = viewportWidth <= _mobileBreakpoint;
+    final bottomNavHeight = isMobile
+        ? 64 + MediaQuery.paddingOf(context).bottom
+        : 0.0;
 
     return Scaffold(
       backgroundColor: PromoColors.deepNavy,
@@ -81,32 +259,71 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
             slivers: [
               SliverAppBar(
                 pinned: true,
-                toolbarHeight: 72,
+                toolbarHeight: isMobile ? 64 : 72,
                 elevation: 0,
-                backgroundColor: PromoColors.deepNavy.withValues(alpha: 0.92),
+                backgroundColor: PromoColors.deepNavy.withValues(alpha: 0.94),
                 surfaceTintColor: Colors.transparent,
-                titleSpacing: viewportWidth > 420 ? 24 : 14,
+                titleSpacing: isMobile ? 14 : 24,
                 title: const _BrandMark(),
                 actions: [
-                  if (viewportWidth > 1120) ...[
-                    _NavButton('HOME', () => _scrollTo(_homeKey)),
-                    _NavButton('시스템소개', () => _scrollTo(_introKey)),
-                    _NavButton('핵심기능', () => _scrollTo(_featuresKey)),
-                    _NavButton('시스템구성도', () => _scrollTo(_architectureKey)),
-                    _NavButton('소프트웨어 화면', () => _scrollTo(_previewKey)),
-                    _NavButton('개발 가능 분야', () => _scrollTo(_casesKey)),
-                    _NavButton('도입효과', () => _scrollTo(_benefitsKey)),
-                    _NavButton('소통총관제', () => _scrollTo(_hubKey)),
-                    _NavButton('문의하기', _openHubInquiry),
-                  ],
-                  Padding(
-                    padding: const EdgeInsets.only(right: 24, left: 10),
-                    child: _ActionButton(
-                      label: '문의하기',
-                      icon: Icons.mail_outline,
-                      onPressed: _openHubInquiry,
+                  if (!isMobile) ...[
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: (viewportWidth - 280).clamp(120, 900),
+                      ),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        reverse: true,
+                        child: Row(
+                          children: [
+                            _NavButton('HOME', () => _scrollTo(_homeKey)),
+                            _NavButton('시스템소개', () => _scrollTo(_introKey)),
+                            _NavButton('핵심기능', () => _scrollTo(_featuresKey)),
+                            _NavButton(
+                              '연동대상',
+                              () => _scrollTo(_integrationKey),
+                            ),
+                            _NavButton(
+                              '시스템구성도',
+                              () => _scrollTo(_architectureKey),
+                            ),
+                            _NavButton(
+                              '소프트웨어 화면',
+                              () => _scrollTo(_previewKey),
+                            ),
+                            _NavButton('개발 가능 분야', () => _scrollTo(_casesKey)),
+                            _NavButton('도입효과', () => _scrollTo(_benefitsKey)),
+                            _NavButton('소통총관제', () => _scrollTo(_hubKey)),
+                            _NavButton('문의하기', () => _scrollTo(_contactKey)),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20, left: 8),
+                      child: _ActionButton(
+                        label: '문의하기',
+                        icon: Icons.mail_outline,
+                        onPressed: _openHubInquiry,
+                      ),
+                    ),
+                  ] else ...[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Semantics(
+                        button: true,
+                        label: '전체메뉴',
+                        child: IconButton(
+                          tooltip: '전체메뉴',
+                          onPressed: _openFullMenu,
+                          icon: const Icon(
+                            Icons.menu,
+                            color: PromoColors.textOnDark,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
               SliverToBoxAdapter(
@@ -114,7 +331,11 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                   key: _homeKey,
                   child: _HeroSection(
                     animation: _pulseController,
-                    onInquiry: _openHubInquiry,
+                    onInquiry: () => _scrollTo(
+                      _contactKey,
+                      tab: MobileNavTab.contact,
+                      menuLabel: '문의하기',
+                    ),
                     onExplore: () => _scrollTo(_previewKey),
                   ),
                 ),
@@ -122,7 +343,17 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
               SliverToBoxAdapter(
                 child: KeyedSubtree(
                   key: _introKey,
-                  child: const _IntroSection(),
+                  child: const _IntroSection(includeWorkerPanel: false),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: KeyedSubtree(
+                  key: _workerKey,
+                  child: const _SectionShell(
+                    top: 0,
+                    bottom: 24,
+                    child: _WorkerFocusPanel(),
+                  ),
                 ),
               ),
               SliverToBoxAdapter(
@@ -131,7 +362,12 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                   child: const _FeatureSection(),
                 ),
               ),
-              const SliverToBoxAdapter(child: _DeviceIntegrationSection()),
+              SliverToBoxAdapter(
+                child: KeyedSubtree(
+                  key: _integrationKey,
+                  child: const _DeviceIntegrationSection(),
+                ),
+              ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
                   key: _architectureKey,
@@ -145,7 +381,13 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                 ),
               ),
               SliverToBoxAdapter(
-                child: _MidPageCta(onInquiry: _openHubInquiry),
+                child: _MidPageCta(
+                  onInquiry: () => _scrollTo(
+                    _contactKey,
+                    tab: MobileNavTab.contact,
+                    menuLabel: '문의하기',
+                  ),
+                ),
               ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
@@ -178,7 +420,24 @@ class _IndustrialLandingPageState extends State<IndustrialLandingPage>
                 ),
               ),
               const SliverToBoxAdapter(child: _Footer()),
+              if (isMobile)
+                SliverToBoxAdapter(
+                  child: SizedBox(height: bottomNavHeight + 12),
+                ),
             ],
+          ),
+          if (isMobile)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: MobileBottomNavBar(
+                active: _activeTab,
+                onSelect: _onBottomNavSelect,
+              ),
+            ),
+          ScrollToTopButton(
+            visible: _showScrollTop,
+            bottomOffset: isMobile ? bottomNavHeight + 16 : 24,
+            onPressed: _scrollToTop,
           ),
           IgnorePointer(
             ignoring: !_loading,
@@ -206,10 +465,28 @@ class _BrandMark extends StatelessWidget {
             MediaQuery.sizeOf(context).width < 720;
 
         if (compact) {
-          return const SotongBrandLogo(
-            variant: SotongLogoVariant.symbol,
-            height: 34,
-            onLightPlate: true,
+          return const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SotongBrandLogo(
+                variant: SotongLogoVariant.symbol,
+                height: 30,
+                onLightPlate: true,
+              ),
+              SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  '소통웨어',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: PromoColors.textOnDark,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
           );
         }
 
@@ -680,7 +957,9 @@ class _LiveDashboardShowcase extends StatelessWidget {
 }
 
 class _IntroSection extends StatelessWidget {
-  const _IntroSection();
+  const _IntroSection({this.includeWorkerPanel = true});
+
+  final bool includeWorkerPanel;
 
   @override
   Widget build(BuildContext context) {
@@ -765,8 +1044,10 @@ class _IntroSection extends StatelessWidget {
               );
             },
           ),
-          const SizedBox(height: 28),
-          const _WorkerFocusPanel(),
+          if (includeWorkerPanel) ...[
+            const SizedBox(height: 28),
+            const _WorkerFocusPanel(),
+          ],
         ],
       ),
     );
@@ -2380,18 +2661,9 @@ class _AlarmRow extends StatelessWidget {
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 8),
-          Text(
-            time,
-            style: TextStyle(
-              color: PromoColors.textMutedOnDark.withValues(alpha: 0.72),
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
+          Flexible(
             child: Text(
-              text,
+              '$time  $text',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
@@ -2403,7 +2675,7 @@ class _AlarmRow extends StatelessWidget {
           ),
         ],
       ),
-    );
+                );
   }
 }
 
